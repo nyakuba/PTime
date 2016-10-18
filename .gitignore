@@ -7,3 +7,7 @@
 /build
 /captures
 .externalNativeBuild
+build.gradle
+config/checkstyle/checkstyle.xml
+gradle.properties
+settings.gradle
