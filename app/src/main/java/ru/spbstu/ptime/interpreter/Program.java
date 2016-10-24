@@ -1,7 +1,5 @@
 package ru.spbstu.ptime.interpreter;
 
-import java.util.Date;
-
 public class Program {
     private String name;
     private ASTNode root;

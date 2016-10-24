@@ -5,8 +5,7 @@ public class ASTTimerByIntervalNode extends ASTNode {
     public ASTTimerByIntervalNode(long seconds) {
         this.seconds = seconds;
     }
-    public ASTNode interpret(ASTInterpreterRun interpreter) {
-        // Launch timer ...
-        return next;
+    public void interpret(ASTInterpreterRun interpreter) {
+        interpreter.runTimer(this.seconds);
     }
 }

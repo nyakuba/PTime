@@ -5,5 +5,5 @@ abstract public class ASTNode {
     public void setNext(ASTNode next) {
         this.next = next;
     }
-    abstract public ASTNode interpret(ASTInterpreterRun interpreter); // Returns next node to interpret
+    abstract public void interpret(ASTInterpreterRun interpreter);
 }
