@@ -8,18 +8,18 @@ import android.widget.Button;
 
 public class HomeActivity extends AppCompatActivity {
 
-    Button btnChrono;
+    Button btnChrono; // объявление кнопки секундомера
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        btnChrono = (Button) findViewById(R.id.btnChrono);
+        btnChrono = (Button) findViewById(R.id.btnChrono); // привязка id к кнопке секундомера
     }
 
-    public void onChronoClick (View view){
-        Intent intent = new Intent(this, ChronoActivity.class);
-        startActivity(intent);
+    public void onChronoClick (View view){ // действие при нажатии на кнопку секундомера
+        Intent intent = new Intent(this, ChronoActivity.class); // создание интента для нового класса (activity)
+        startActivity(intent); // запуск созданного
     }
 }
