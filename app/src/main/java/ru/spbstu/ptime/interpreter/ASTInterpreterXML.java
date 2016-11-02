@@ -12,10 +12,10 @@ public class ASTInterpreterXML implements ASTInterpreter {
     public void runStopwatch() {
         //...
     }
-    public void runLoop(ASTLoopNode node) {
+    public void runLoop(ASTNode body, int iterations) {
         //...
     }
-    public void run(Program prog) {
+    public void run(ASTNode body) {
         //Компилируем дерево prog в xml-файл
         //...
     }

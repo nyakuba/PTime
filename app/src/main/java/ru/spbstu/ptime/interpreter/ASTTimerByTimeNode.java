@@ -7,7 +7,8 @@ public class ASTTimerByTimeNode extends ASTNode {
     public ASTTimerByTimeNode(Date date) {
         this.date = date;
     }
-    public void interpret(ASTInterpreterRun interpreter) {
+    public ASTNode interpret(ASTInterpreter interpreter) {
         interpreter.runTimer(this.date);
+        return next;
     }
 }

@@ -7,7 +7,8 @@ public class ASTLoopNode extends ASTNode {
         this.inner = inner;
         this.iterations = iterations;
     }
-    public void interpret(ASTInterpreterRun interpreter) {
-        interpreter.runLoop(this);
+    public ASTNode interpret(ASTInterpreter interpreter) {
+        interpreter.runLoop(inner, iterations);
+        return next;
     }
 }

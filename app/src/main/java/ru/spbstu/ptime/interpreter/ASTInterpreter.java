@@ -6,6 +6,6 @@ public interface ASTInterpreter {
     void runTimer(Date date);
     void runTimer(long seconds);
     void runStopwatch();
-    void runLoop(ASTLoopNode node);
-    void run(Program program);
+    void runLoop(ASTNode body, int iterations);
+    void run(ASTNode body);
 }

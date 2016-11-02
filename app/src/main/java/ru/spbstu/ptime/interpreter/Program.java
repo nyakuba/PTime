@@ -7,4 +7,10 @@ public class Program {
         this.name = name;
         this.root = root;
     }
+    public String getName() {
+        return name;
+    }
+    public ASTNode getBody() {
+        return root;
+    }
 }
