@@ -31,7 +31,7 @@ public class ASTInterpreterDebug implements ASTInterpreter {
             while (true)
                 run(body);
         else
-            for (int i = 0; i < iterations; ++i)
+            while (-1 != --iterations)
                 run(body);
     }
     public void run(ASTNode body) {

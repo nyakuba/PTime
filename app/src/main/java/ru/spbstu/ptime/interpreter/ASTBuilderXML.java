@@ -26,19 +26,23 @@ public class ASTBuilderXML implements ASTBuilder {
         program = null;
         dateFormat = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
     }
-    private Node nextElement(final Node xmlNode) throws ASTBuilderXMLException {
-        NodeList lst = xmlNode.getChildNodes();
-        int i;
-        for (i = 0; i < lst.getLength() && lst.item(i).getNodeType() != Node.ELEMENT_NODE; ++i);
-        if (i == lst.getLength())
-            throw new ASTBuilderXMLException();
-        return lst.item(i);
-//        Node cur = xmlNode.getFirstChild();
-//        while (cur != null && cur.getNodeType() != Node.ELEMENT_NODE)
-//            cur = cur.getFirstChild();
-//        if (cur == null)
-//            throw new ASTBuilderXMLException();
-//        return cur;
+    private ASTNode parseNodeList(final NodeList lst) throws ASTBuilderXMLException {
+        int len = lst.getLength();
+        int i = 0;
+        while (i < len && lst.item(i).getNodeType() != Node.ELEMENT_NODE)
+            ++i;
+        if (i == len)
+            throw new ASTBuilderXMLException(); /* Среди нод списка нет тегов */
+        ASTNode root = parseNode(lst.item(i)), cur = root, next;
+        for (++i; i < lst.getLength(); ++i) {
+            Node item = lst.item(i);
+            if (item.getNodeType() == Node.ELEMENT_NODE) {
+                next = parseNode(item);
+                cur.setNext(next);
+                cur = next;
+            }
+        }
+        return root;
     }
     private ASTNode parseNode(final Node xmlNode) throws ASTBuilderXMLException {
         ASTNode astNode;
@@ -46,17 +50,20 @@ public class ASTBuilderXML implements ASTBuilder {
         try {
             switch (xmlNode.getNodeName()) {
                 case "timer":
-                    if (!xmlNode.hasAttributes())
+                    if (!xmlNode.hasAttributes()) /* Нет атрибутов у <timer> */
                         throw new ASTBuilderXMLException();
-                    attr = (Attr) xmlNode.getAttributes().item(0);
+                    attr = (Attr)xmlNode.getAttributes().item(0);
                     switch (attr.getName()) {
-                        case "time":
+                        case "time": /* Таймер задан чч:мм:сс */
+                            /* TO-DO:
+                             * Учесть текущий день. Сейчас дата по дефолту устанавливается на Jan 01 1970 MSK,
+                              * хоть и с верным временем дня. */
                             astNode = new ASTTimerByTimeNode(dateFormat.parse(attr.getValue()));
                             break;
-                        case "interval":
+                        case "interval": /* Таймер задан интервалом в секундах */
                             astNode = new ASTTimerByIntervalNode(Long.parseLong(attr.getValue()));
                             break;
-                        default:
+                        default: /* Какой-то другой аттрибут O_o */
                             throw new ASTBuilderXMLException();
                     }
                     break;
@@ -66,27 +73,16 @@ public class ASTBuilderXML implements ASTBuilder {
                 case "loop":
                     int iterations = 0;
                     if (!xmlNode.hasAttributes())
-                        iterations = -1; /* Бесконечный цикл */
+                        iterations = -1; /* Нет аттрибутов, не указано число итераций = бесконечный цикл */
                     attr = (Attr) xmlNode.getAttributes().item(0);
-                    if (!"iterations".equals(attr.getNodeName())) /* Имя атрибута не "iterations" */
+                    if (!"iterations".equals(attr.getNodeName())) /* Имя первого атрибута не "iterations" */
                         throw new ASTBuilderXMLException();
                     iterations = Integer.parseInt(attr.getValue());
                     if (iterations < -1 || !xmlNode.hasChildNodes())
+                        /* Отрицательное количество итераций или между открывающим и закрывающим тегами пусто. */
                         throw new ASTBuilderXMLException();
-//                    Node innerXML = nextElement(xmlNode);
-//                    ASTNode inner = parseNode(innerXML);
-//                    ASTNode cur = inner;
                     NodeList lst = xmlNode.getChildNodes();
-                    ASTNode inner = parseNode(lst.item(0)), cur = inner;
-                    ASTNode nextNode;
-                    for (int i = 1; i < lst.getLength(); ++i) {
-                        Node item = lst.item(i);
-                        if (item.getNodeType() == Node.ELEMENT_NODE) {
-                            nextNode = parseNode(item);
-                            cur.setNext(nextNode);
-                            cur = nextNode;
-                        }
-                    }
+                    ASTNode inner = parseNodeList(lst);
                     astNode = new ASTLoopNode(inner, iterations);
                     break;
                 default:
@@ -104,26 +100,16 @@ public class ASTBuilderXML implements ASTBuilder {
             Document doc = dBuilder.parse(file);
             Node xmlNode = doc.getDocumentElement();
             if (!"program".equals(xmlNode.getNodeName()) || !xmlNode.hasAttributes())
-                throw new ASTBuilderXMLException();
+                throw new ASTBuilderXMLException(); /* Первый тег -- не <program> */
             Attr attribute = (Attr) xmlNode.getAttributes().item(0);
-            if (!"name".equals(attribute.getName()))
+            if (!"name".equals(attribute.getName())) /* Первый аттрибут тега -- не name */
                 throw new ASTBuilderXMLException();
             String programName = attribute.getValue();
-            if (xmlNode.hasChildNodes())
-                xmlNode = nextElement(xmlNode);
-            else
+            if (!xmlNode.hasChildNodes()) /* Программа пуста */
                 throw new ASTBuilderXMLException();
-            ASTNode root = parseNode(xmlNode);
-            ASTNode current = root, next;
-            NodeList lst = xmlNode.getChildNodes();
-            for (int i = 0; i < lst.getLength(); ++i) {
-                if (xmlNode.getNodeType() == Node.ELEMENT_NODE) {
-                    next = parseNode(xmlNode);
-                    current.setNext(next);
-                    current = next;
-                }
-            }
-            program = new Program(programName, root);
+            NodeList programNodes = xmlNode.getChildNodes(); /* Список нод между тегами <program> ... </program> */
+            ASTNode body = parseNodeList(programNodes); /* Корень синтаксического дерева */
+            program = new Program(programName, body);
         }
         catch (ASTBuilderXMLException|IOException|ParserConfigurationException|SAXException e) {
             program = null;
