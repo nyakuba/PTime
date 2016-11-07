@@ -6,14 +6,12 @@ import java.util.Date;
 public class ASTInterpreterDebug implements ASTInterpreter {
     public static void main(String args[]) {
         ASTBuilderXML builder = new ASTBuilderXML();
-        ASTInterpreterDebug interpreter = new ASTInterpreterDebug();
+        ASTInterpreter interpreter = new ASTInterpreterXML();
         File xmlFile = new File(args[0]);
         builder.build(xmlFile);
         Program program = builder.getProgram();
-        if (program != null) {
-            System.out.println("Program \"" + program.getName() + "\":");
-            interpreter.run(program.getBody());
-        }
+        if (program != null)
+            interpreter.run(program);
         else
             System.out.println("Failed to parse \"" + args[0] + "\" :CCCC");
     }
@@ -38,5 +36,9 @@ public class ASTInterpreterDebug implements ASTInterpreter {
         ASTNode cur = body;
         while (cur != null)
             cur = cur.interpret(this);
+    }
+    public void run(Program program) {
+        System.out.format("Program \"%s\":\n", program.getName());
+        run(program.getBody());
     }
 }
