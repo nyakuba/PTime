@@ -19,4 +19,7 @@ public class ASTInterpreterRun implements ASTInterpreter {
         //Проход по дереву
         //...
     }
+    public void run(Program program) {
+        //...
+    }
 }

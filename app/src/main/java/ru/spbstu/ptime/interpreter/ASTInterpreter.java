@@ -8,4 +8,5 @@ public interface ASTInterpreter {
     void runStopwatch();
     void runLoop(ASTNode body, int iterations);
     void run(ASTNode body);
+    void run(Program program);
 }

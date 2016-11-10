@@ -6,13 +6,11 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.text.ParseException;
-import java.util.Locale;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -22,10 +20,8 @@ class ASTBuilderXMLException extends Exception {}
 
 public class ASTBuilderXML implements ASTBuilder {
     private Program program;
-    private DateFormat dateFormat;
     public ASTBuilderXML() {
         program = null;
-        dateFormat = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
     }
     private ASTNode parseNodeList(final NodeList lst) throws ASTBuilderXMLException {
         int len = lst.getLength();
@@ -35,7 +31,7 @@ public class ASTBuilderXML implements ASTBuilder {
         if (i == len)
             throw new ASTBuilderXMLException(); /* Среди нод списка нет тегов */
         ASTNode root = parseNode(lst.item(i)), cur = root, next;
-        for (++i; i < lst.getLength(); ++i) {
+        for (++i; i < len; ++i) {
             Node item = lst.item(i);
             if (item.getNodeType() == Node.ELEMENT_NODE) {
                 next = parseNode(item);
@@ -56,10 +52,15 @@ public class ASTBuilderXML implements ASTBuilder {
                     attr = (Attr)xmlNode.getAttributes().item(0);
                     switch (attr.getName()) {
                         case "time": /* Таймер задан чч:мм:сс */
-                            /* TO-DO:
-                             * Учесть текущий день. Сейчас дата по дефолту устанавливается на Jan 01 1970 MSK,
-                              * хоть и с верным временем дня. */
-                            astNode = new ASTTimerByTimeNode(dateFormat.parse(attr.getValue()));
+                            Date current = new Date();  /* Текущее время */
+                            Calendar calendar = new GregorianCalendar();
+                            String hms[] = attr.getValue().split(":");
+                            calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hms[0])); /* Заданные часы */
+                            calendar.set(Calendar.MINUTE, Integer.parseInt(hms[1]));      /* минуты */
+                            calendar.set(Calendar.SECOND, Integer.parseInt(hms[2]));      /* секунды */
+                            if (current.after(calendar.getTime()))  /* Если сегодня заданное время уже не наступит, */
+                                calendar.roll(Calendar.DATE, true); /* переносим на завтра. */
+                            astNode = new ASTTimerByTimeNode(calendar.getTime());
                             break;
                         case "interval": /* Таймер задан интервалом в секундах */
                             astNode = new ASTTimerByIntervalNode(Long.parseLong(attr.getValue()));
@@ -90,7 +91,7 @@ public class ASTBuilderXML implements ASTBuilder {
                     throw new ASTBuilderXMLException();
             }
         }
-        catch (ParseException|NumberFormatException e) {
+        catch (NumberFormatException e) {
             throw new ASTBuilderXMLException();
         }
         return astNode;
