@@ -13,9 +13,7 @@ import ru.spbstu.ptime.interpreter.ASTTimerByTimeNode;
 import static org.junit.Assert.*;
 
 /**
- * Example local unit test, which will execute on the development machine (host).
- *
- * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
+ * Tests for ASTNode instances
  */
 public class ASTNodeTest {
     @Test
@@ -116,10 +114,11 @@ public class ASTNodeTest {
     }
 
     private long randomInt() {
-       return (long) Math.random() * Long.MAX_VALUE;
+        return (long) Math.random() * Long.MAX_VALUE;
     }
 
-    private long randomInt(long lo, long hi) {
-        return lo + randomInt()*(hi - lo + 1);
+    private long randomInt(int lo, int hi) {
+        return lo + (long) (Math.random() * (hi - lo));
     }
+
 }
