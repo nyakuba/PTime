@@ -1,6 +1,9 @@
 package ru.spbstu.ptime.interpreter;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.Date;
 
 public class ASTInterpreterDebug implements ASTInterpreter {
@@ -8,14 +11,19 @@ public class ASTInterpreterDebug implements ASTInterpreter {
         ASTBuilderXML builder = new ASTBuilderXML();
         ASTInterpreterDebug interpreter = new ASTInterpreterDebug();
         File xmlFile = new File(args[0]);
-        builder.build(xmlFile);
-        Program program = builder.getProgram();
-        if (program != null) {
-            System.out.println("Program \"" + program.getName() + "\":");
-            interpreter.run(program.getBody());
+        try {
+            InputStream stream = new FileInputStream(xmlFile);
+            builder.build(stream);
+            Program program = builder.getProgram();
+            if (program != null) {
+                System.out.println("Program \"" + program.getName() + "\":");
+                interpreter.run(program.getBody());
+            }
+            else
+                System.out.println("Failed to parse \"" + args[0] + "\" :CCCC");
+        } catch (FileNotFoundException e) {
+            System.out.println("Cannot open file " + args[0]);
         }
-        else
-            System.out.println("Failed to parse \"" + args[0] + "\" :CCCC");
     }
     public void runTimer(Date date) {
         System.out.printf("Timer [Date = %s]\n", date);
