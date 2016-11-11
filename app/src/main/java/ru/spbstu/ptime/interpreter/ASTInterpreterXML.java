@@ -17,7 +17,7 @@ public class ASTInterpreterXML implements ASTInterpreter {
         this.stream = stream;
     }
     public void runTimer(Date date) {
-        System.out.format("%s<timer time=\"%s\"/>%n", indent, ASTBuilder.DATE_FORMAT.format(date));
+        stream.format("%s<timer time=\"%s\"/>%n", indent, ASTBuilder.DATE_FORMAT.format(date));
     }
     public void runTimer(long seconds) {
         stream.format("%s<timer interval=\"%d\"/>%n", indent, seconds);
