@@ -6,8 +6,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -96,10 +96,10 @@ public class ASTBuilderXML implements ASTBuilder {
         }
         return astNode;
     }
-    public void build(File file) {
+    public void build(InputStream stream) {
         try {
             DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            Document doc = dBuilder.parse(file);
+            Document doc = dBuilder.parse(stream);
             Node xmlNode = doc.getDocumentElement();
             if (!"program".equals(xmlNode.getNodeName()) || !xmlNode.hasAttributes())
                 throw new ASTBuilderXMLException(); /* Первый тег -- не <program> */
