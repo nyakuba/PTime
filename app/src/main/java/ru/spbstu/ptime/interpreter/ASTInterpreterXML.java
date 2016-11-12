@@ -1,9 +1,11 @@
 package ru.spbstu.ptime.interpreter;
 
 import java.io.PrintStream;
+import java.text.DateFormat;
 import java.util.Date;
 
 public class ASTInterpreterXML implements ASTInterpreter {
+    private static DateFormat DATE_FORMAT = ASTBuilderXML.DATE_FORMAT;
     private String indent;
     private PrintStream stream;
     public ASTInterpreterXML() {
@@ -13,11 +15,11 @@ public class ASTInterpreterXML implements ASTInterpreter {
         indent = "";
         this.stream = stream;
     }
-    public void setPrintStream(PrintStream stream) {
+    public void setStream(PrintStream stream) {
         this.stream = stream;
     }
     public void runTimer(Date date) {
-        stream.format("%s<timer time=\"%s\"/>%n", indent, ASTBuilder.DATE_FORMAT.format(date));
+        stream.format("%s<timer time=\"%s\"/>%n", indent, DATE_FORMAT.format(date));
     }
     public void runTimer(long seconds) {
         stream.format("%s<timer interval=\"%d\"/>%n", indent, seconds);

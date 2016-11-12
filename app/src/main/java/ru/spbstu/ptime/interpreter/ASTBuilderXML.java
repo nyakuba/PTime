@@ -8,9 +8,12 @@ import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -19,6 +22,7 @@ import javax.xml.parsers.ParserConfigurationException;
 class ASTBuilderXMLException extends Exception {}
 
 public class ASTBuilderXML implements ASTBuilder {
+    public static DateFormat DATE_FORMAT = new SimpleDateFormat("HH:mm:ss", Locale.ENGLISH);
     private Program program;
     public ASTBuilderXML() {
         program = null;
