@@ -10,53 +10,24 @@
         android:id="@android:id/tabhost"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
             <TabWidget
                 android:id="@android:id/tabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
             </TabWidget>
+
             <FrameLayout
                 android:id="@android:id/tabcontent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-                <LinearLayout
-                    android:id="@+id/chrono"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-                    <TextView
-                        android:id="@+id/tvTab1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/txt_tab1"/>
-                </LinearLayout>
-                <LinearLayout
-                    android:id="@+id/timer"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-                    <TextView
-                        android:id="@+id/tvTab2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/txt_tab2"/>
-                </LinearLayout>
-                <LinearLayout
-                    android:id="@+id/prog"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-                    <TextView
-                        android:id="@+id/tvTab3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/txt_tab3"/>
-                </LinearLayout>
             </FrameLayout>
         </LinearLayout>
     </TabHost>
+
 </LinearLayout>
