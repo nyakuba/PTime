@@ -5,4 +5,8 @@
     <string name="stop">Стоп</string>
     <string name="reset">Сброс</string>
     <string name="digit_keyboard_font">fonts/362_LCDNOVA.ttf</string>
+
+    <string name="txt_tab1">активна вкладка Секундомер</string>
+    <string name="txt_tab2">активна вкладка Таймер</string>
+    <string name="txt_tab3">активна вкладка Программы</string>
 </resources>
