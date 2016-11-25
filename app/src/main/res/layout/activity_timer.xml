@@ -19,9 +19,11 @@
             android:id="@+id/timerBtnStart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:text="@string/timerBtnStartText"
-            android:onClick="onTimerStartClick"/>
+            android:onClick="onTimerStartClick (TimerActivity)"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:elevation="0dp"
+            android:fontFamily="sans-serif-medium" />
 
         <Button
             android:id="@+id/timerBtnSetTime"
@@ -29,7 +31,10 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/timerBtnSetTimeText"
-            android:onClick="onTimerSetTimeClick"/>
+            android:onClick="onTimerSetTimeClick"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:fontFamily="sans-serif-medium"
+            android:textSize="14sp" />
 
         <Button
             android:id="@+id/timerBtnStop"
@@ -37,7 +42,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/timerBtnStopText"
-            android:onClick="onTimerStopClick" />
+            android:onClick="onTimerStopClick"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:fontFamily="sans-serif-medium" />
 
     </LinearLayout>
 
