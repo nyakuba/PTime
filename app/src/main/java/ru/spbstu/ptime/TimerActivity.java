@@ -97,7 +97,6 @@ public class TimerActivity extends Activity {
                     timerBtnStart.setEnabled(true);
                     timerBtnSetTime.setEnabled(true);
                     timerBtnStop.setEnabled(false);
-                    Toast.makeText(TimerActivity.this, "Время таймера истекло!", Toast.LENGTH_SHORT).show();    // всплывающее сообщение
                 }
             }
         };
