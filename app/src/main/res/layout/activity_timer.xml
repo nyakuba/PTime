@@ -4,10 +4,53 @@
     android:id="@+id/activity_timer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="ru.spbstu.ptime.Timer">
+    tools:context="ru.spbstu.ptime.TimerActivity">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/timerChronometer"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="72dp">
+
+        <Button
+            android:id="@+id/timerBtnStart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/timerBtnStartText"
+            android:onClick="onTimerStartClick"/>
+
+        <Button
+            android:id="@+id/timerBtnSetTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/timerBtnSetTimeText"
+            android:onClick="onTimerSetTimeClick"/>
+
+        <Button
+            android:id="@+id/timerBtnStop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/timerBtnStopText"
+            android:onClick="onTimerStopClick" />
+
+    </LinearLayout>
+
+    <Chronometer
+        android:id="@+id/timerChronometer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:keepScreenOn="false"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:textAlignment="center"
+        android:textSize="80sp"
+        android:text="@string/timerDefText"/>
 
 </RelativeLayout>

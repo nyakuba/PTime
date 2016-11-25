@@ -57,7 +57,7 @@ public class ChronoActivity extends Activity {
                     // подсчитываем время
                     temp = SystemClock.elapsedRealtime() - chr.getBase();
                     hour = (temp/1000)/3600;
-                    min = (temp/1000)/60;
+                    min = (temp/1000%3600)/60;
                     sec = (temp/1000)%60;
                     if (hour < 10) {
                         if (min < 10) {

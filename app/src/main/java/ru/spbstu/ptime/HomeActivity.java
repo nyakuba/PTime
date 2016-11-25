@@ -33,8 +33,8 @@ public class HomeActivity extends TabActivity {
         tabHost.addTab(tabSpec);
 
         tabSpec = tabHost.newTabSpec("tag3");
-        tabSpec.setIndicator("Еще раз конструктор :D");
-        tabSpec.setContent(new Intent(this, ConstructorActivity.class));
+        tabSpec.setIndicator("Таймер");
+        tabSpec.setContent(new Intent(this, TimerActivity.class));
         tabHost.addTab(tabSpec);
     }
 }

@@ -9,4 +9,10 @@
     <string name="txt_tab1">активна вкладка Секундомер</string>
     <string name="txt_tab2">активна вкладка Таймер</string>
     <string name="txt_tab3">активна вкладка Конструктор</string>
+    <string name="title_activity_timer">TimerActivity</string>
+
+    <string name="timerBtnStartText">Старт</string>
+    <string name="timerBtnStopText">Стоп</string>
+    <string name="timerBtnSetTimeText">Задать</string>
+    <string name="timerDefText">00:00:00</string>
 </resources>
