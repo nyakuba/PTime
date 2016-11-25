@@ -8,6 +8,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity android:name=".HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -15,6 +16,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".ChronoActivity">
             <intent-filter>
                 <action android:name="android.intent.action.chronometer" />
@@ -22,6 +24,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
         <activity android:name=".constructor.ConstructorActivity">
             <intent-filter>
                 <action android:name="android.intent.action.CONSTRUCTOR" />
@@ -29,6 +32,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
         <activity android:name=".TimerActivity">
             <intent-filter>
                 <action android:name="android.intent.action.TIMER" />

@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/timerBtnStartText"
-            android:onClick="onTimerStartClick (TimerActivity)"
+            android:onClick="onTimerStartClick"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:elevation="0dp"
             android:fontFamily="sans-serif-medium" />
