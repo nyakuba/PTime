@@ -20,10 +20,11 @@ public class TimerActivity extends Activity {
 
     int defaultColor;   // костыль для изменения цвета "00:00:00"
 
+    private boolean isAlertShowing = false;
     private boolean isLaunchd = false;
     long elapsedTimeInMillis = 0;       // вспомогательная переменная для случая возобновления активити
     long currTimerTimeInMillis = 0;     // время, отображаемое на экране
-    long fullTimerTimeInMillis = 6000;  // промежуток времени, заданный пользователем
+    long fullTimerTimeInMillis = 15000;  // промежуток времени, заданный пользователем
 
     int i = 0;      // фича
 
@@ -58,10 +59,10 @@ public class TimerActivity extends Activity {
 
         // создаем диалоговое окно, сообщающее о завершении таймера
         AlertDialog.Builder builder = new AlertDialog.Builder(TimerActivity.this);
-        builder.setTitle("Таймер")
-                .setMessage("Время истекло!")
+        builder.setTitle("Timer")
+                .setMessage("Time is up")
                 .setCancelable(false)
-                .setNegativeButton("Ок",
+                .setNegativeButton("Ok",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
@@ -131,6 +132,8 @@ public class TimerActivity extends Activity {
         timerBtnStart.setEnabled(savedInstanceState.getBoolean("enBtnStart"));
         timerBtnSetTime.setEnabled(savedInstanceState.getBoolean("enBtnSetTime"));
         timerBtnStop.setEnabled(savedInstanceState.getBoolean("enBtnStop"));
+        if (savedInstanceState.getBoolean("isAlertShowing"))
+            alert.show();
         Log.d(LOG_TAG, "TimerOnRestoreInstanceState");
     }
 
@@ -147,6 +150,7 @@ public class TimerActivity extends Activity {
     // сохранение данных при перезапуске Activity
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putBoolean("isAlertShowing", alert.isShowing());
         outState.putLong("base", timer.getBase());
         outState.putBoolean("isLaunchd", isLaunchd);
         outState.putLong("currTimerTimeInMillis", currTimerTimeInMillis);
@@ -179,7 +183,7 @@ public class TimerActivity extends Activity {
         timerBtnStart.setEnabled(false);
         timerBtnSetTime.setEnabled(false);
         timerBtnStop.setEnabled(true);
-        Toast.makeText(this, "Таймер запущен", Toast.LENGTH_SHORT).show(); // всплывающее сообщение
+        Toast.makeText(this, "Timer is started", Toast.LENGTH_SHORT).show(); // всплывающее сообщение
     }
 
     // при нажатии кнопки "задать"
@@ -199,6 +203,6 @@ public class TimerActivity extends Activity {
         timerBtnStart.setEnabled(true);
         timerBtnSetTime.setEnabled(true);
         timerBtnStop.setEnabled(false);
-        Toast.makeText(this, "Таймер остановлен", Toast.LENGTH_SHORT).show(); // всплывающее сообщение
+        Toast.makeText(this, "Timer is cancelled", Toast.LENGTH_SHORT).show(); // всплывающее сообщение
     }
 }

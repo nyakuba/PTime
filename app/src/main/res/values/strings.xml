@@ -11,8 +11,8 @@
     <string name="reset">Сброс</string>
     <string name="digit_keyboard_font">fonts/362_LCDNOVA.ttf</string>
 
-    <string name="timerBtnStartText">Старт</string>
-    <string name="timerBtnStopText">Стоп</string>
-    <string name="timerBtnSetTimeText">Задать</string>
+    <string name="timerBtnStartText">Start</string>
+    <string name="timerBtnStopText">Stop</string>
+    <string name="timerBtnSetTimeText">Set Time</string>
     <string name="timerDefText">00:00:00</string>
 </resources>

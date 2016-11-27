@@ -23,17 +23,17 @@ public class HomeActivity extends TabActivity {
         TabHost.TabSpec tabSpec;
 
         tabSpec = tabHost.newTabSpec("tag1");
-        tabSpec.setIndicator("Секундомер");
+        tabSpec.setIndicator("Stopwatch");
         tabSpec.setContent(new Intent(this, ChronoActivity.class));
         tabHost.addTab(tabSpec);
 
         tabSpec = tabHost.newTabSpec("tag2");
-        tabSpec.setIndicator("Конструктор");
+        tabSpec.setIndicator("Constructor");
         tabSpec.setContent(new Intent(this, ConstructorActivity.class));
         tabHost.addTab(tabSpec);
 
         tabSpec = tabHost.newTabSpec("tag3");
-        tabSpec.setIndicator("Таймер");
+        tabSpec.setIndicator("Timer");
         tabSpec.setContent(new Intent(this, TimerActivity.class));
         tabHost.addTab(tabSpec);
     }
