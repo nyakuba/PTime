@@ -60,4 +60,15 @@
         android:textSize="80sp"
         android:text="@string/timerDefText"/>
 
+    <ProgressBar
+        android:id="@+id/timerProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/timerChronometer"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        style="?android:attr/progressBarStyleHorizontal" />
+
 </RelativeLayout>

@@ -10,12 +10,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 public class TimerActivity extends Activity {
 
     private Button timerBtnStart, timerBtnSetTime, timerBtnStop;
     private Chronometer timer;
+    private ProgressBar timerProgressBar;
     private AlertDialog alert;
 
     int defaultColor;   // костыль для изменения цвета "00:00:00"
@@ -24,6 +26,7 @@ public class TimerActivity extends Activity {
     private boolean isLaunchd = false;
     long elapsedTimeInMillis = 0;       // вспомогательная переменная для случая возобновления активити
     long currTimerTimeInMillis = 0;     // время, отображаемое на экране
+    int MaxProgress = 10000;            // процент пройденного времени для прогресс бара (0..100)
     long fullTimerTimeInMillis = 15000;  // промежуток времени, заданный пользователем
 
     int i = 0;      // фича
@@ -46,6 +49,8 @@ public class TimerActivity extends Activity {
         timerBtnSetTime = (Button) findViewById(R.id.timerBtnSetTime);
         timerBtnStop = (Button) findViewById(R.id.timerBtnStop);
         timer = (Chronometer) findViewById(R.id.timerChronometer);
+        timerProgressBar = (ProgressBar) findViewById(R.id.timerProgressBar);
+        timerProgressBar.setMax(MaxProgress);
 
         defaultColor = timer.getCurrentTextColor();     // костыль для изменения цвета "00:00:00"
 
@@ -79,6 +84,7 @@ public class TimerActivity extends Activity {
                 // если не возобновление таймера
                 currTimerTimeInMillis = fullTimerTimeInMillis - SystemClock.elapsedRealtime() + timer.getBase() + 500;  // +500mlsec чтобы покрыть задержку
                 arg0.setText(MillisesondsToString(currTimerTimeInMillis));
+                timerProgressBar.setProgress((int)((1.0 - ((double)currTimerTimeInMillis/(double)fullTimerTimeInMillis)) * (double)MaxProgress));   //вычисляем и устанавливаем прогресс для прогресс-бара
                 elapsedTimeInMillis = SystemClock.elapsedRealtime();    //  запоминаем прошедшее время
 
                 // если время истекло (следующий "тик" после 00:00:00)
@@ -88,12 +94,14 @@ public class TimerActivity extends Activity {
                     isLaunchd = false;                  // таймер остановлен
                     timer.setTextColor(defaultColor);   // возвращаем цвет цифр по умолчанию
                     timer.setText(MillisesondsToString(fullTimerTimeInMillis)); // устанавливаем начальную строку таймера
+                    timerProgressBar.setProgress(0);    // сбрасываем ProgressBar
                     currTimerTimeInMillis = fullTimerTimeInMillis;
                 }
                 // если на этот "тик" таймер досшел до 00:00:00
                 else if (currTimerTimeInMillis < 1000)
                 {
                     timer.setTextColor(getResources().getColor(R.color.colorAccent));       // выделяем 00:00:00 цветом
+                    timerProgressBar.setProgress(timerProgressBar.getMax());                // прогресс-бар дошел до конца
                     alert.show();   // отображаем диалоговое окно
                     timerBtnStart.setEnabled(true);
                     timerBtnSetTime.setEnabled(true);
@@ -127,6 +135,7 @@ public class TimerActivity extends Activity {
         super.onRestoreInstanceState(savedInstanceState);
         timer.setBase(savedInstanceState.getLong("base"));
         isLaunchd = savedInstanceState.getBoolean("isLaunchd");
+        timerProgressBar.setProgress(savedInstanceState.getInt("currentProgress"));
         currTimerTimeInMillis = savedInstanceState.getLong("currTimerTimeInMillis");
         elapsedTimeInMillis = savedInstanceState.getLong("elapsedTimeInMillis");
         timerBtnStart.setEnabled(savedInstanceState.getBoolean("enBtnStart"));
@@ -144,6 +153,8 @@ public class TimerActivity extends Activity {
             timer.start(); // если таймер был запущен до возобновления, запускаем его
         else
             timer.setText(MillisesondsToString(fullTimerTimeInMillis));
+        if (isAlertShowing)
+            alert.show();
         Log.d(LOG_TAG, "TimerOnResume ");
     }
 
@@ -153,6 +164,7 @@ public class TimerActivity extends Activity {
         outState.putBoolean("isAlertShowing", alert.isShowing());
         outState.putLong("base", timer.getBase());
         outState.putBoolean("isLaunchd", isLaunchd);
+        outState.putInt("currentProgress", timerProgressBar.getProgress());
         outState.putLong("currTimerTimeInMillis", currTimerTimeInMillis);
         outState.putLong("elapsedTimeInMillis", elapsedTimeInMillis);
         outState.putBoolean("enBtnStart", timerBtnStart.isEnabled());
@@ -199,6 +211,7 @@ public class TimerActivity extends Activity {
         isLaunchd = false; // таймер остановлен
         timer.setText(MillisesondsToString(fullTimerTimeInMillis)); // устанавливаем начальную строку таймера
         currTimerTimeInMillis = fullTimerTimeInMillis;
+        timerProgressBar.setProgress(0);
         // устанавливаем активность кнопок
         timerBtnStart.setEnabled(true);
         timerBtnSetTime.setEnabled(true);
