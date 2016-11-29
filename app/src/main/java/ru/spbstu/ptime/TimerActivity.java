@@ -18,10 +18,12 @@ public class TimerActivity extends Activity {
     private Chronometer timer;
     private ProgressBar timerProgressBar;
     private AlertDialog alert;
+    private MyTimePickerDialog mTimePicker;
 
     int defaultColor;   // костыль для изменения цвета "00:00:00"
 
     private boolean isAlertShowing = false;
+    private boolean isSetTimeDialog = false;
     private boolean isLaunchd = false;
     long elapsedTimeInMillis = 0;       // вспомогательная переменная для случая возобновления активити
     long currTimerTimeInMillis = 0;     // время, отображаемое на экране
@@ -83,9 +85,22 @@ public class TimerActivity extends Activity {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
+                                isAlertShowing = false;
                             }
                         });
         alert = builder.create();
+
+        mTimePicker = new MyTimePickerDialog(this, new MyTimePickerDialog.OnTimeSetListener() {
+
+            @Override
+            public void onTimeSet(MyTimePicker view, int hourOfDay, int minute, int seconds) {
+                // TODO Auto-generated method stub
+                fullTimerTimeInMillis = hourOfDay*1000*3600 + minute*1000*60 + seconds*1000;
+                currTimerTimeInMillis = fullTimerTimeInMillis;
+                timer.setText(MillisesondsToString(fullTimerTimeInMillis));
+                isSetTimeDialog = false;
+            }
+        }, GetHours(fullTimerTimeInMillis), GetMinuts(fullTimerTimeInMillis), GetSeconds(fullTimerTimeInMillis));
     }
 
     public  Chronometer.OnChronometerTickListener MyTimer (final Chronometer timer) {
@@ -115,6 +130,7 @@ public class TimerActivity extends Activity {
                     timer.setTextColor(getResources().getColor(R.color.colorAccent));       // выделяем 00:00:00 цветом
                     timerProgressBar.setProgress(timerProgressBar.getMax());                // прогресс-бар дошел до конца
                     alert.show();   // отображаем диалоговое окно
+                    isAlertShowing = true;
                     timerBtnStart.setEnabled(true);
                     timerBtnSetTime.setEnabled(true);
                     timerBtnStop.setEnabled(false);
@@ -146,6 +162,7 @@ public class TimerActivity extends Activity {
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         timer.setBase(savedInstanceState.getLong("base"));
+        fullTimerTimeInMillis = savedInstanceState.getLong("fullTimerTimeInMillis");
         isLaunchd = savedInstanceState.getBoolean("isLaunchd");
         timerProgressBar.setProgress(savedInstanceState.getInt("currentProgress"));
         currTimerTimeInMillis = savedInstanceState.getLong("currTimerTimeInMillis");
@@ -153,8 +170,7 @@ public class TimerActivity extends Activity {
         timerBtnStart.setEnabled(savedInstanceState.getBoolean("enBtnStart"));
         timerBtnSetTime.setEnabled(savedInstanceState.getBoolean("enBtnSetTime"));
         timerBtnStop.setEnabled(savedInstanceState.getBoolean("enBtnStop"));
-        if (savedInstanceState.getBoolean("isAlertShowing"))
-            alert.show();
+        isAlertShowing = savedInstanceState.getBoolean("isAlertShowing");
         Log.d(LOG_TAG, "TimerOnRestoreInstanceState");
     }
 
@@ -173,8 +189,9 @@ public class TimerActivity extends Activity {
     // сохранение данных при перезапуске Activity
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean("isAlertShowing", alert.isShowing());
+        outState.putBoolean("isAlertShowing", isAlertShowing);
         outState.putLong("base", timer.getBase());
+        outState.putLong("fullTimerTimeInMillis", fullTimerTimeInMillis);
         outState.putBoolean("isLaunchd", isLaunchd);
         outState.putInt("currentProgress", timerProgressBar.getProgress());
         outState.putLong("currTimerTimeInMillis", currTimerTimeInMillis);
@@ -212,17 +229,8 @@ public class TimerActivity extends Activity {
 
     // при нажатии кнопки "задать"
     public void onTimerSetTimeClick (View view) {
-        MyTimePickerDialog mTimePicker = new MyTimePickerDialog(this, new MyTimePickerDialog.OnTimeSetListener() {
-
-            @Override
-            public void onTimeSet(MyTimePicker view, int hourOfDay, int minute, int seconds) {
-                // TODO Auto-generated method stub
-                fullTimerTimeInMillis = hourOfDay*1000*3600 + minute*1000*60 + seconds*1000;
-                currTimerTimeInMillis = fullTimerTimeInMillis;
-                timer.setText(MillisesondsToString(fullTimerTimeInMillis));
-            }
-        }, GetHours(fullTimerTimeInMillis), GetHours(fullTimerTimeInMillis), GetHours(fullTimerTimeInMillis));
         mTimePicker.show();
+        isSetTimeDialog = true;
     }
 
     // при нажатии кнопки останова
