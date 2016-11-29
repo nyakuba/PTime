@@ -1,6 +1,5 @@
 package ru.spbstu.ptime;
 
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -27,16 +26,29 @@ public class TimerActivity extends Activity {
     long elapsedTimeInMillis = 0;       // вспомогательная переменная для случая возобновления активити
     long currTimerTimeInMillis = 0;     // время, отображаемое на экране
     int MaxProgress = 10000;            // процент пройденного времени для прогресс бара (0..100)
-    long fullTimerTimeInMillis = 15000;  // промежуток времени, заданный пользователем
+    long fullTimerTimeInMillis = 0;  // промежуток времени, заданный пользователем
 
     int i = 0;      // фича
 
     final String LOG_TAG = "TimerActivity";
 
+    int GetHours(long millis){
+        return (int)((millis/1000)/3600000);
+    }
+
+    int GetMinuts(long millis){
+        return (int)(((millis/1000)%3600)/60);
+    }
+
+    int GetSeconds(long millis){
+        return (int)((millis/1000)%60);
+    }
+
     String MillisesondsToString (long millis)
     {
         return String.format("%02d:%02d:%02d", (millis / 1000) / 3600, ((millis / 1000) % 3600) / 60, (millis / 1000) % 60);
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -200,9 +212,17 @@ public class TimerActivity extends Activity {
 
     // при нажатии кнопки "задать"
     public void onTimerSetTimeClick (View view) {
-        String lol[] = {"Фигушки!", "Лол нет", "НЕЗЯ"};
-        Toast.makeText(this, lol[i], Toast.LENGTH_SHORT).show(); // всплывающее сообщение
-        i = (i + 1) % 3;
+        MyTimePickerDialog mTimePicker = new MyTimePickerDialog(this, new MyTimePickerDialog.OnTimeSetListener() {
+
+            @Override
+            public void onTimeSet(MyTimePicker view, int hourOfDay, int minute, int seconds) {
+                // TODO Auto-generated method stub
+                fullTimerTimeInMillis = hourOfDay*1000*3600 + minute*1000*60 + seconds*1000;
+                currTimerTimeInMillis = fullTimerTimeInMillis;
+                timer.setText(MillisesondsToString(fullTimerTimeInMillis));
+            }
+        }, GetHours(fullTimerTimeInMillis), GetHours(fullTimerTimeInMillis), GetHours(fullTimerTimeInMillis));
+        mTimePicker.show();
     }
 
     // при нажатии кнопки останова
