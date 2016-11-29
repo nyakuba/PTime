@@ -1,8 +1,22 @@
 <resources>
     <string name="app_name">PTime</string>
+
+    <string name="tabChronoActivity">Stopwatch</string>
+    <string name="tabTimerActivity">Timer</string>
+    <string name="tabProgsActivity">Progs</string>
+
     <string name="start_time">00:00:00</string>
     <string name="start">Старт</string>
     <string name="stop">Стоп</string>
     <string name="reset">Сброс</string>
     <string name="digit_keyboard_font">fonts/362_LCDNOVA.ttf</string>
+
+    <string name="timerBtnStartText">Start</string>
+    <string name="timerBtnStopText">Stop</string>
+    <string name="timerBtnSetTimeText">Set Time</string>
+    <string name="timerDefText">00:00:00</string>
+    <string name="title_activity_timer">Timer</string>
+
+    <string name="timepicker_ok">Set time</string>
+    <string name="timepicker_cancel">Cancel</string>
 </resources>

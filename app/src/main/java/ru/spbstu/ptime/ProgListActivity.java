@@ -78,7 +78,7 @@ public class ProgListActivity extends Activity {
     }
 
     public void onAddProgramClick(View v) {
-        final EditText editText = new EditText(this); /* TO-DO: добавить фильтр вводимых символов. */
+        final EditText editText = new EditText(this); /* TODO: добавить фильтр вводимых символов. */
         editText.setSingleLine();
         new AlertDialog.Builder(this)
                 .setTitle("Name")
@@ -96,8 +96,7 @@ public class ProgListActivity extends Activity {
                                 refreshFileList();
                             }
                             catch (FileNotFoundException|SecurityException e) {
-                                    /* TO-DO:
-                                     * Попросить пользователя вбить другое имя, если не удается создать с этим. */
+                                    /* TODO: Попросить пользователя вбить другое имя, если не удается создать с этим. */
                                 e.printStackTrace();
                             }
                         }

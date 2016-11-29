@@ -1,0 +1,91 @@
+package ru.spbstu.ptime.constructor;
+
+import android.content.Context;
+import android.support.v4.util.Pair;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.woxthebox.draglistview.DragItemAdapter;
+import com.woxthebox.draglistview.DragListView;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import ru.spbstu.ptime.constructor.items.AddItem;
+import ru.spbstu.ptime.constructor.items.ListItem;
+
+/**
+ * ItemAdapter represent a factory instance to create draggable list items from given dataset
+ */
+public class ItemAdapter extends DragItemAdapter<Pair<Long, ListItem>, ItemAdapter.ViewHolder> {
+    public static final boolean DRAG_ON_LONG_PRESS = true;
+
+    private static Long mItemId = 0L;
+    private List<Pair<Long, ListItem>> mData = new ArrayList<>();
+    private int mLayoutId;
+    private int mGrabHandleId;
+
+    /**
+     * @param layoutId item layout id
+     * @param grabHandleId layout to drag
+     */
+    public ItemAdapter(int layoutId, int grabHandleId) {
+        mData.add(new Pair<Long, ListItem>(mItemId++, new AddItem()));
+        mLayoutId = layoutId;
+        mGrabHandleId = grabHandleId;
+        setHasStableIds(true);
+        setItemList(mData);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return mItemList.get(position).first;
+    }
+
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        Context context = parent.getContext();
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View view = inflater.inflate(mLayoutId, parent, false);
+        return new ViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        super.onBindViewHolder(holder, position);
+        Pair<Long, ListItem> item = mItemList.get(position);
+        item.second.initializeLayout(item.first, holder.mItemLayout, this);
+    }
+
+    public void addItem(ListItem item) {
+        mData.add(mData.size() - 1, new Pair<Long, ListItem>(mItemId++, item));
+    }
+
+    public boolean removeItemByID(Long id) {
+        boolean removed = false;
+        Iterator<Pair<Long, ListItem>> it = mData.iterator();
+        while (it.hasNext()) {
+            Pair<Long, ListItem> pair = it.next();
+            if (pair.first.compareTo(id) == 0) {
+                it.remove();
+                removed = true;
+            }
+        }
+        return removed;
+    }
+
+    /**
+     * Class that fills item layout with actual data
+     */
+    public class ViewHolder extends DragItemAdapter.ViewHolder {
+        public View mItemLayout;
+
+        public ViewHolder(final View itemView) {
+            super(itemView, mGrabHandleId, DRAG_ON_LONG_PRESS);
+            mItemLayout = itemView;
+        }
+    }
+}

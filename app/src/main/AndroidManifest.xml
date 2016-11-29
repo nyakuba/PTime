@@ -20,6 +20,18 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity android:name=".constructor.ConstructorActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.CONSTRUCTOR" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".TimerActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.TIMER" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity android:name=".ProgListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.PROGLIST"/>
