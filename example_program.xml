@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <program name="prog">
     <loop iterations="25">
-        <timer time="23:43:15"/>
+        <timer time="03:43:15"/>
         <loop iterations="3">
             <timer interval="5"/>
         </loop>

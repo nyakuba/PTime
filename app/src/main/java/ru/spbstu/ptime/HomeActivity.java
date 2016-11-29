@@ -9,6 +9,7 @@ import android.widget.Button;
 public class HomeActivity extends AppCompatActivity {
 
     Button btnChrono; // объявление кнопки секундомера
+    Button btnProgList; // кнопка для перехода к списку программ
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,10 +17,15 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         btnChrono = (Button) findViewById(R.id.btnChrono); // привязка id к кнопке секундомера
+        btnProgList = (Button) findViewById(R.id.btnProgList);
     }
 
     public void onChronoClick (View view){ // действие при нажатии на кнопку секундомера
         Intent intent = new Intent(this, ChronoActivity.class); // создание интента для нового класса (activity)
         startActivity(intent); // запуск созданного
+    }
+    public void onProgListClick(View view) {
+        Intent intent = new Intent(this, ProgListActivity.class);
+        startActivity(intent);
     }
 }

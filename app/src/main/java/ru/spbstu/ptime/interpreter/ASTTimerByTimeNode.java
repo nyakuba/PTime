@@ -9,6 +9,7 @@ public class ASTTimerByTimeNode extends ASTNode {
         this.date = date;
     }
 
+    @Override
     public ASTNode interpret(ASTInterpreter interpreter) {
         interpreter.runTimer(this.date);
         return next;
