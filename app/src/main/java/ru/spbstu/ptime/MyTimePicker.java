@@ -54,8 +54,6 @@ public class MyTimePicker extends FrameLayout {
     private int mCurrentHour = 0; // 0-23
     private int mCurrentMinute = 0; // 0-59
     private int mCurrentSeconds = 0; // 0-59
-    private boolean mIs24HourView = false;
-    private boolean mIsAm;
 
     // ui components
     private final NumberPicker mHourPicker;
@@ -171,7 +169,7 @@ public class MyTimePicker extends FrameLayout {
     /**
      * Used to save / restore state of time picker
      */
-    private static class SavedState extends BaseSavedState {
+    /*private static class SavedState extends BaseSavedState {
 
         private final int mHour;
         private final int mMinute;
@@ -227,7 +225,7 @@ public class MyTimePicker extends FrameLayout {
         super.onRestoreInstanceState(ss.getSuperState());
         setCurrentHour(ss.getHour());
         setCurrentMinute(ss.getMinute());
-    }
+    }*/
 
     /**
      * Set the callback that indicates the time has been adjusted by the user.

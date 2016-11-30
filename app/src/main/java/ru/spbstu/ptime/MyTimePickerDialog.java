@@ -1,12 +1,10 @@
 package ru.spbstu.ptime;
 
-import java.util.Calendar;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
-import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -37,8 +35,6 @@ public class MyTimePickerDialog extends AlertDialog implements OnClickListener,
 
     private final MyTimePicker mTimePicker;
     private final OnTimeSetListener mCallback;
-    private final Calendar mCalendar;
-    private final java.text.DateFormat mDateFormat;
 
     int mInitialHourOfDay;
     int mInitialMinute;
@@ -76,8 +72,6 @@ public class MyTimePickerDialog extends AlertDialog implements OnClickListener,
         mInitialMinute = minute;
         mInitialSeconds = seconds;
 
-        mDateFormat = DateFormat.getTimeFormat(context);
-        mCalendar = Calendar.getInstance();
         updateTitle(mInitialHourOfDay, mInitialMinute, mInitialSeconds);
 
         setButton(context.getText(R.string.timepicker_ok), this);
@@ -108,20 +102,11 @@ public class MyTimePickerDialog extends AlertDialog implements OnClickListener,
         updateTitle(hourOfDay, minute, seconds);
     }
 
-    public void updateTime(int hourOfDay, int minutOfHour, int seconds) {
-        mTimePicker.setCurrentHour(hourOfDay);
-        mTimePicker.setCurrentMinute(minutOfHour);
-        mTimePicker.setCurrentSecond(seconds);
-    }
-
     private void updateTitle(int hour, int minute, int seconds) {
-        mCalendar.set(Calendar.HOUR_OF_DAY, hour);
-        mCalendar.set(Calendar.MINUTE, minute);
-        mCalendar.set(Calendar.SECOND, seconds);
         setTitle(String.format("%02d" , hour) + ":" + String.format("%02d" , minute) + ":" + String.format("%02d" , seconds));
     }
 
-    @Override
+    /*@Override
     public Bundle onSaveInstanceState() {
         Bundle state = super.onSaveInstanceState();
         state.putInt(HOUR, mTimePicker.getCurrentHour());
@@ -141,7 +126,11 @@ public class MyTimePickerDialog extends AlertDialog implements OnClickListener,
         mTimePicker.setCurrentSecond(seconds);
         mTimePicker.setOnTimeChangedListener(this);
         updateTitle(hour, minute, seconds);
-    }
+    } */
+
+    public int getmInitialHourOfDay() { return mTimePicker.getCurrentHour(); }
+    public int getmInitialMinute() { return mTimePicker.getCurrentMinute(); }
+    public int getmInitialSeconds() { return mTimePicker.getCurrentSeconds(); }
 
 
 }

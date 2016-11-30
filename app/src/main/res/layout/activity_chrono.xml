@@ -21,7 +21,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/btnStart"
             android:layout_weight="1"
-            android:onClick="onStartClick" />
+            android:onClick="onStartClick"
+            style="@style/Widget.AppCompat.Button.Borderless" />
 
         <Button
             android:text="@string/stop"
@@ -29,7 +30,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/btnStop"
             android:layout_weight="1"
-            android:onClick="onStopClick" />
+            android:onClick="onStopClick"
+            style="@style/Widget.AppCompat.Button.Borderless" />
 
         <Button
             android:text="@string/reset"
@@ -37,7 +39,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/btnReset"
             android:layout_weight="1"
-            android:onClick="onResetClick" />
+            android:onClick="onResetClick"
+            style="@style/Widget.AppCompat.Button.Borderless" />
     </LinearLayout>
 
     <Chronometer
@@ -49,6 +52,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"
         android:textAlignment="center"
-        android:textSize="100sp" />
+        android:textSize="80sp" />
 
 </RelativeLayout>
