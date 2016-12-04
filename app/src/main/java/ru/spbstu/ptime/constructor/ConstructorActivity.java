@@ -2,10 +2,22 @@ package ru.spbstu.ptime.constructor;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.Handler;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 
 import com.woxthebox.draglistview.DragListView;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.locks.Lock;
 
 import ru.spbstu.ptime.R;
 import ru.spbstu.ptime.constructor.items.StopwatchItem;
@@ -32,14 +44,16 @@ import ru.spbstu.ptime.constructor.items.TimerByIntervalItem;
 
  * to proguard-rules.pro
  */
+
+
 public class ConstructorActivity extends Activity {
     private ItemAdapter mAdapter;
+    private TimeEngine mTimeEngine;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_constructor);
-
 
         final DragListView mDragListView = (DragListView) findViewById(R.id.drag_list_view);
         mDragListView.setLayoutManager(new LinearLayoutManager(this));
@@ -60,10 +74,6 @@ public class ConstructorActivity extends Activity {
 //                dragView.setBackgroundColor(Color.LTGRAY);
 //            }
 //        });
-    }
-
-    public void onAddItemClick(View view) {
-//        mAdapter.add("New item!", id++);
     }
 
     @Override

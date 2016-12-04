@@ -9,7 +9,7 @@ import ru.spbstu.ptime.constructor.ItemAdapter;
  */
 public interface ListItem {
 
-    void initializeLayout(final Long id, final View itemLayout, final ItemAdapter adapter);
+    void initializeLayout(final Long id, final ItemAdapter.ViewHolder holder, final ItemAdapter adapter);
 
 }
 

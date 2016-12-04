@@ -1,6 +1,7 @@
 package ru.spbstu.ptime.constructor;
 
 import android.content.Context;
+import android.os.CountDownTimer;
 import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,14 +51,14 @@ public class ItemAdapter extends DragItemAdapter<Pair<Long, ListItem>, ItemAdapt
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(mLayoutId, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(view, inflater);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
         Pair<Long, ListItem> item = mItemList.get(position);
-        item.second.initializeLayout(item.first, holder.mItemLayout, this);
+        item.second.initializeLayout(item.first, holder, this);
     }
 
     public void addItem(ListItem item) {
@@ -82,10 +83,12 @@ public class ItemAdapter extends DragItemAdapter<Pair<Long, ListItem>, ItemAdapt
      */
     public class ViewHolder extends DragItemAdapter.ViewHolder {
         public View mItemLayout;
+        public LayoutInflater mInflater;
 
-        public ViewHolder(final View itemView) {
+        public ViewHolder(final View itemView, LayoutInflater inflater) {
             super(itemView, mGrabHandleId, DRAG_ON_LONG_PRESS);
             mItemLayout = itemView;
+            mInflater = inflater;
         }
     }
 }

@@ -16,8 +16,8 @@ import ru.spbstu.ptime.constructor.ItemAdapter;
 public class AddItem implements ListItem {
 
     @Override
-    public void initializeLayout(final Long id, final View itemLayout, final ItemAdapter adapter) {
-        LinearLayout item = (LinearLayout) itemLayout;
+    public void initializeLayout(final Long id, final ItemAdapter.ViewHolder holder, final ItemAdapter adapter) {
+        LinearLayout item = (LinearLayout) holder.mItemLayout;
 //        if (!AddItem.class.equals(item.getTag())) {
             item.removeAllViews();
             Button button = new Button(item.getContext());
