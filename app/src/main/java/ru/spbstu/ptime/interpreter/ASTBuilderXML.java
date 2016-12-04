@@ -5,6 +5,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,6 +19,8 @@ import java.util.Locale;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 class ASTBuilderXMLException extends Exception {}
 
@@ -26,6 +29,10 @@ public class ASTBuilderXML implements ASTBuilder {
     private Program program;
     public ASTBuilderXML() {
         program = null;
+    }
+    public String getProgramName(InputStream stream) {
+        /* TODO */
+        return "name";
     }
     private ASTNode parseNodeList(final NodeList lst) throws ASTBuilderXMLException {
         int len = lst.getLength();
@@ -85,7 +92,7 @@ public class ASTBuilderXML implements ASTBuilder {
                         throw new ASTBuilderXMLException();
                     iterations = Integer.parseInt(attr.getValue());
                     if (iterations < -1 || !xmlNode.hasChildNodes())
-                        /* Отрицательное количество итераций или между открывающим и закрывающим тегами пусто. */
+                        /* Отрицательное количество итераций или между открывающим и закрывающим тегами пусто (пустое тело). */
                         throw new ASTBuilderXMLException();
                     NodeList lst = xmlNode.getChildNodes();
                     ASTNode inner = parseNodeList(lst);

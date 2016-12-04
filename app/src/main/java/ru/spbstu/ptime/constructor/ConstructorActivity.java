@@ -1,9 +1,11 @@
 package ru.spbstu.ptime.constructor;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
+import android.widget.Toast;
 
 import com.woxthebox.draglistview.DragListView;
 
@@ -35,11 +37,21 @@ import ru.spbstu.ptime.constructor.items.TimerByIntervalItem;
 public class ConstructorActivity extends Activity {
     private ItemAdapter mAdapter;
 
+    public static final int PURPOSE_NEW = 0;
+    public static final int PURPOSE_EDIT = 1;
+    public static final int PURPOSE_RUN = 2;
+    private int purpose = PURPOSE_NEW;
+    private String filepath;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_constructor);
 
+        Intent intent = getIntent();
+        purpose = intent.getIntExtra("purpose", PURPOSE_NEW);
+        if (purpose != PURPOSE_NEW)
+            filepath = intent.getStringExtra("filepath");
 
         final DragListView mDragListView = (DragListView) findViewById(R.id.drag_list_view);
         mDragListView.setLayoutManager(new LinearLayoutManager(this));
@@ -98,6 +110,7 @@ public class ConstructorActivity extends Activity {
 
     @Override
     protected void onStart() { // состояние запуска Activity
+//        Toast.makeText(this, String.valueOf(purpose) + " | " + filepath, Toast.LENGTH_LONG).show();
         super.onStart();
     }
 

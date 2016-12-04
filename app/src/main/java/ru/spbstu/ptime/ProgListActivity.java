@@ -3,27 +3,23 @@ package ru.spbstu.ptime;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import ru.spbstu.ptime.constructor.ConstructorActivity;
+
 public class ProgListActivity extends Activity {
-    ListView progListView;
+    private ListView progListView;
     private ArrayAdapter<File> progListAdapter;
     private File filesDir;
-    private static final String DEFAULT_PROGRAM =
-            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>%n" +
-            "<program name=\"%s\">%n" +
-            "    <stopwatch/>%n" +
-            "</program>%n";
 
     private void refreshFileList() {
         progListAdapter.clear();
@@ -31,11 +27,21 @@ public class ProgListActivity extends Activity {
         progListAdapter.notifyDataSetChanged();
     }
 
+    private void goToConstructorActivity(int purpose, final String filepath) {
+        Intent intent = new Intent(ProgListActivity.this, ConstructorActivity.class);
+        intent.putExtra("purpose", purpose);
+        if (purpose != ConstructorActivity.PURPOSE_NEW)
+            intent.putExtra("filepath", filepath);
+        startActivity(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_proglist);
-        filesDir = getApplicationContext().getFilesDir();
+        filesDir = new File(getApplicationContext().getFilesDir().getAbsolutePath() + "/programs");
+        if (!filesDir.exists())
+            filesDir.mkdirs(); /* TODO: обработать ошибку, если не создается директория '/programs' */
         progListAdapter = new ArrayAdapter<>(this, R.layout.proglist_item, R.id.progListItemTextView,
                 new ArrayList<>(Arrays.asList(filesDir.listFiles())));
         progListView = (ListView) findViewById(R.id.progListView);
@@ -44,30 +50,39 @@ public class ProgListActivity extends Activity {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 final AlertDialog.Builder builder = new AlertDialog.Builder(progListView.getContext());
-                final File file = progListAdapter.getItem(position);//files.get(position);
-                builder.setTitle(file.getName());
-                builder.setItems(new CharSequence[]{"Run", "Edit", "Delete"}, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case 0:
-                                // Run program...
-                                break;
-                            case 1:
-                                // Edit program...
-                                break;
-                            case 2: /* Delete program */
-                                if (file.delete())
-                                    refreshFileList();
-                                break;
-                            default:
-                                break;
+                final File file = progListAdapter.getItem(position);
+                if (file != null) {
+                    builder.setTitle(file.getName());
+                    builder.setItems(new CharSequence[]{"Run", "Edit", "Delete"}, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent;
+                            switch (which) {
+                                case 0: /* Run program */
+                                    goToConstructorActivity(ConstructorActivity.PURPOSE_RUN, file.getAbsolutePath());
+                                    break;
+                                case 1: /* Edit program. Create a new ConstructorActivity and pass file to edit. */
+                                    goToConstructorActivity(ConstructorActivity.PURPOSE_EDIT, file.getAbsolutePath());
+                                    break;
+                                case 2: /* Delete program */
+                                    if (file.delete())
+                                        refreshFileList();
+                                    break;
+                                default:
+                                    break;
+                            }
                         }
-                    }
-                });
-                builder.show();
-                return false;
+                    });
+                    builder.show();
+                }
+                return true;
+                /* Returning true after performing onItemLongClick prevents firing onItemClick event after onItemLongClick. */
             }
+        });
+        progListView.setOnItemClickListener((adapterView, view, position, id) -> {
+            final File file = progListAdapter.getItem(position);
+            if (file != null)
+                goToConstructorActivity(ConstructorActivity.PURPOSE_EDIT, file.getAbsolutePath());
         });
     }
 
@@ -78,30 +93,6 @@ public class ProgListActivity extends Activity {
     }
 
     public void onAddProgramClick(View v) {
-        final EditText editText = new EditText(this); /* TODO: добавить фильтр вводимых символов. */
-        editText.setSingleLine();
-        new AlertDialog.Builder(this)
-                .setTitle("Name")
-                .setMessage("Enter name for a new program:")
-                .setView(editText)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (which == DialogInterface.BUTTON_POSITIVE) {
-                            final String name = editText.getText().toString();
-                            /* Здесь будет переход в ConstructorActivity. */
-                            try {
-                                PrintStream out = new PrintStream(filesDir.getPath() + '/' + name + ".xml");
-                                out.format(DEFAULT_PROGRAM, name);
-                                out.close();
-                                refreshFileList();
-                            }
-                            catch (FileNotFoundException|SecurityException e) {
-                                    /* TODO: Попросить пользователя вбить другое имя, если не удается создать с этим. */
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                })
-                .show();
+        goToConstructorActivity(ConstructorActivity.PURPOSE_NEW, null);
     }
 }
