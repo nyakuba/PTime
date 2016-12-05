@@ -34,11 +34,30 @@ public class AddItem implements ListItem {
         LinearLayout layout = (LinearLayout) inflater.inflate(mLayoutId, item, true);
 
         Button btnAddNewItem = (Button) layout.findViewById(R.id.btnAddNewItem);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(item.getContext());
+        builder.setItems(new CharSequence[]{"Timer", "Stopwatch", "Loop"}, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case 0: // timer
+                        adapter.addItem(new TimerByIntervalItem(10L));
+                        break;
+                    case 1: // stopwatch
+                        adapter.addItem(new StopwatchItem());
+                        break;
+                    case 2: // TODO: loop support
+                        break;
+                    default: // do nothing
+                        break;
+                }
+                adapter.notifyDataSetChanged();
+            }
+        });
+
         btnAddNewItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                adapter.addItem(new StopwatchItem());
-                adapter.notifyDataSetChanged();
+                builder.show();
             }
         });
 
