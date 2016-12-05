@@ -27,6 +27,7 @@ public class AddItem implements ListItem {
     @Override
     public void initializeLayout(final Long id, final ItemAdapter.ViewHolder holder, final ItemAdapter adapter) {
         LinearLayout item = (LinearLayout) holder.mItemLayout;
+        holder.mItemLayout.setPadding(adapter.getIndentation(id), 0, 0, 0);
         // since we generate the ListItem content dynamically,
         // we will just recreate layout using LayoutInflater
         item.removeAllViews();
@@ -45,7 +46,9 @@ public class AddItem implements ListItem {
                     case 1: // stopwatch
                         adapter.addItem(new StopwatchItem());
                         break;
-                    case 2: // TODO: loop support
+                    case 2: // loop
+                        adapter.addItem(new LoopStartItem(3L));
+                        adapter.addItem(new LoopEndItem());
                         break;
                     default: // do nothing
                         break;
