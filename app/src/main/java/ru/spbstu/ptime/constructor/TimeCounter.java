@@ -12,10 +12,11 @@ public abstract class TimeCounter implements Runnable {
     private boolean mStarted = false;
     private boolean mPaused = false;
     private boolean mStopped = false;
-    private long mStartTime;
-    private long mCurrentTime;
-    private long mEndTime;
-    private long mTick;
+    private boolean mRunForever = false;
+    private long mStartTime = 0;
+    private long mCurrentTime = 0;
+    private long mEndTime = 0;
+    private long mTick = 0;
     private Handler mHandler;
     private Runnable mUpdater = new Runnable() {
         @Override
@@ -23,6 +24,14 @@ public abstract class TimeCounter implements Runnable {
             onUpdateTime();
         }
     };
+
+    public TimeCounter(long startTime, long tick, Handler handler) {
+        mRunForever = true;
+        mStartTime = startTime;
+        mCurrentTime = startTime;
+        mTick = tick;
+        mHandler = handler;
+    }
 
     public TimeCounter(long startTime, long endTime, long tick, Handler handler) {
         mStartTime = startTime;
@@ -57,7 +66,7 @@ public abstract class TimeCounter implements Runnable {
                 onStarted();
             }
         });
-        while (!mStopped && mCurrentTime < mEndTime) {
+        while (!mStopped && (mRunForever || mCurrentTime < mEndTime)) {
             synchronized (lock) {
                 while (mPaused) {
                     try {
@@ -88,6 +97,9 @@ public abstract class TimeCounter implements Runnable {
         synchronized (lock) {
             mStarted = true;
             mPaused = false;
+            long pause = System.currentTimeMillis() - mCurrentTime;
+            mStartTime += pause;
+            mEndTime += pause;
             lock.notify();
         }
     }

@@ -48,7 +48,7 @@ public class TimeEngine {
 
     public static void startStopwatch(final TimeController controller, final ViewUpdater<Long> updater) {
         long currentTime = System.currentTimeMillis();
-        TimeCounter counter = new TimeCounter(currentTime, Long.MAX_VALUE, 30, mHandler) {
+        TimeCounter counter = new TimeCounter(currentTime, 30, mHandler) {
             @Override
             public void onUpdateTime() {
                 updater.updateView(getCurrentTime() - getStartTime());
