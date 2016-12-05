@@ -72,7 +72,7 @@ public abstract class TimeCounter implements Runnable {
             } catch (InterruptedException e) {
                 // ignore
             }
-            mCurrentTime += mTick;
+            mCurrentTime = System.currentTimeMillis();
             mHandler.post(mUpdater);
         }
         mHandler.post(new Runnable() {

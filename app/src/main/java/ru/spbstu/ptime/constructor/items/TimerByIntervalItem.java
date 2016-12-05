@@ -30,6 +30,9 @@ public class TimerByIntervalItem extends TimeController implements ListItem, Vie
     public void initializeLayout(final Long id, final ItemAdapter.ViewHolder holder, final ItemAdapter adapter) {
         mAdapter = adapter;
         LinearLayout item = (LinearLayout) holder.mItemLayout;
+        // since we generate the ListItem content dynamically,
+        // we will just recreate layout using LayoutInflater
+        item.removeAllViews();
         LayoutInflater inflater = holder.mInflater;
         LinearLayout layout = (LinearLayout) inflater.inflate(mLayoutId, item, true);
         mTextView = (TextView) layout.findViewById(R.id.text);
@@ -68,6 +71,7 @@ public class TimerByIntervalItem extends TimeController implements ListItem, Vie
         btnDel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                stop(); // stop TimeCounter
                 boolean removed = adapter.removeItemByID(id);
                 if (removed) {
                     adapter.notifyDataSetChanged();

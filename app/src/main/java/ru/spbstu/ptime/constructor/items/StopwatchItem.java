@@ -25,6 +25,9 @@ public class StopwatchItem extends TimeController implements ListItem, ViewUpdat
     public void initializeLayout(final Long id, final ItemAdapter.ViewHolder holder, final ItemAdapter adapter) {
         mAdapter = adapter;
         LinearLayout item = (LinearLayout) holder.mItemLayout;
+        // since we generate the ListItem content dynamically,
+        // we will just recreate layout using LayoutInflater
+        item.removeAllViews();
         LayoutInflater inflater = holder.mInflater;
         LinearLayout layout = (LinearLayout) inflater.inflate(mLayoutId, item, true);
         mTextView = (TextView) layout.findViewById(R.id.text);
@@ -62,6 +65,7 @@ public class StopwatchItem extends TimeController implements ListItem, ViewUpdat
         btnDel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                stop(); // stop TimeCounter
                 boolean removed = adapter.removeItemByID(id);
                 if (removed) {
                     adapter.notifyDataSetChanged();
