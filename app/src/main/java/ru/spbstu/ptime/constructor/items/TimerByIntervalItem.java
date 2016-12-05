@@ -16,11 +16,10 @@ import ru.spbstu.ptime.constructor.ViewUpdater;
 /**
  * Timer that is defined by interval
  */
-public class TimerByIntervalItem extends TimeController implements ListItem, ViewUpdater<Long> {
+public class TimerByIntervalItem implements ListItem, ViewUpdater<Long> {
     private final @LayoutRes int mLayoutId = R.layout.timer_by_interval_item;
     private long mSeconds = 0;
     private TextView mTextView;
-    private ItemAdapter mAdapter;
 
     public TimerByIntervalItem(long seconds) {
         mSeconds = seconds;
@@ -28,7 +27,6 @@ public class TimerByIntervalItem extends TimeController implements ListItem, Vie
 
     @Override
     public void initializeLayout(final Long id, final ItemAdapter.ViewHolder holder, final ItemAdapter adapter) {
-        mAdapter = adapter;
         LinearLayout item = (LinearLayout) holder.mItemLayout;
         // since we generate the ListItem content dynamically,
         // we will just recreate layout using LayoutInflater
@@ -39,15 +37,15 @@ public class TimerByIntervalItem extends TimeController implements ListItem, Vie
         mTextView.setText(mSeconds + " sec. finished");
 
         Button btnStart = (Button) layout.findViewById(R.id.btnStart);
-        final TimeController controller = this;
+        final TimeController timer = new TimeController();
         final ViewUpdater<Long> updater = this;
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!running()) {
-                    TimeEngine.startIntervalTimer(controller, updater, mSeconds);
+                if (!timer.running()) {
+                    TimeEngine.startIntervalTimer(timer, updater, mSeconds);
                 }
-                start(); // start timer
+                timer.start();
             }
         });
 
@@ -55,7 +53,7 @@ public class TimerByIntervalItem extends TimeController implements ListItem, Vie
         btnPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pause(); // pause timer
+                timer.pause();
             }
         });
 
@@ -63,7 +61,7 @@ public class TimerByIntervalItem extends TimeController implements ListItem, Vie
         btnStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                stop(); // stop timer
+                timer.stop();
             }
         });
 
@@ -71,7 +69,7 @@ public class TimerByIntervalItem extends TimeController implements ListItem, Vie
         btnDel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                stop(); // stop TimeCounter
+                timer.stop();
                 boolean removed = adapter.removeItemByID(id);
                 if (removed) {
                     adapter.notifyDataSetChanged();

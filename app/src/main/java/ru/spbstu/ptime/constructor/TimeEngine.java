@@ -28,6 +28,11 @@ public class TimeEngine {
         long currentTime = System.currentTimeMillis();
         TimeCounter counter = new TimeCounter(currentTime, currentTime + seconds*1000, 1000, mHandler) {
             @Override
+            public void onStarted() {
+                updater.updateView(Math.max(0, seconds - 1));
+            }
+
+            @Override
             public void onUpdateTime() {
                 updater.updateView((getEndTime() - getCurrentTime()) / getTick());
             }
@@ -47,6 +52,11 @@ public class TimeEngine {
             @Override
             public void onUpdateTime() {
                 updater.updateView(getCurrentTime() - getStartTime());
+            }
+
+            @Override
+            public void onFinished() {
+                updater.updateView(0L);
             }
         };
         controller.setTimeCounter(counter);
