@@ -33,6 +33,7 @@ public class TimerByIntervalItem extends ASTTimerByIntervalNode implements ListI
     @Override
     public void initializeLayout(final Long id, final ItemAdapter.ViewHolder holder, final ItemAdapter adapter) {
         LinearLayout item = (LinearLayout) holder.mItemLayout;
+        holder.mItemLayout.setPadding(adapter.getIndentation(id), 0, 0, 0);
         // since we generate the ListItem content dynamically,
         // we will just recreate layout using LayoutInflater
         item.removeAllViews();

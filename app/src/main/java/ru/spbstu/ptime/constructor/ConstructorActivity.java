@@ -22,6 +22,8 @@ import java.util.Set;
 import java.util.concurrent.locks.Lock;
 
 import ru.spbstu.ptime.R;
+import ru.spbstu.ptime.constructor.items.LoopEndItem;
+import ru.spbstu.ptime.constructor.items.LoopStartItem;
 import ru.spbstu.ptime.constructor.items.StopwatchItem;
 import ru.spbstu.ptime.constructor.items.TimerByIntervalItem;
 import ru.spbstu.ptime.interpreter.Program;
@@ -137,6 +139,8 @@ public class ConstructorActivity extends Activity {
     private void makeSampleItems(ItemAdapter adapter) {
         adapter.addItem(new TimerByIntervalItem(10L));
         adapter.addItem(new StopwatchItem());
+        adapter.addItem(new LoopStartItem(3L));
         adapter.addItem(new TimerByIntervalItem(5L));
+        adapter.addItem(new LoopEndItem());
     }
 }

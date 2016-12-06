@@ -27,16 +27,18 @@ import ru.spbstu.ptime.interpreter.ASTStopwatchNode;
  */
 public class StopwatchItem extends ASTStopwatchNode implements ListItem, ViewUpdater<Long> {
     private final @LayoutRes int mLayoutId = R.layout.stopwatch_item;
-    TextView mTextView;
+    private TextView mTextView;
 
     @Override
     public void initializeLayout(final Long id, final ItemAdapter.ViewHolder holder, final ItemAdapter adapter) {
         LinearLayout item = (LinearLayout) holder.mItemLayout;
+        holder.mItemLayout.setPadding(adapter.getIndentation(id), 0, 0, 0);
         // since we generate the ListItem content dynamically,
         // we will just recreate layout using LayoutInflater
         item.removeAllViews();
         LayoutInflater inflater = holder.mInflater;
         LinearLayout layout = (LinearLayout) inflater.inflate(mLayoutId, item, true);
+
         mTextView = (TextView) layout.findViewById(R.id.text);
         updateView(0L);
 
