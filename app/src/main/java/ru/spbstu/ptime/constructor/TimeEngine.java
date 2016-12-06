@@ -6,6 +6,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import ru.spbstu.ptime.interpreter.ASTInterpreter;
+import ru.spbstu.ptime.interpreter.ASTInterpreterUI;
+
 public class TimeEngine {
     private static int NUMBER_OF_CORES = Runtime.getRuntime().availableProcessors();
     // Sets the amount of time an idle thread waits before terminating
@@ -24,7 +27,7 @@ public class TimeEngine {
     // no instances of TimeEngine is allowed
     private TimeEngine() { }
 
-    public static void startIntervalTimer(final TimeController controller, final ViewUpdater<Long> updater, long seconds) {
+    public static void startIntervalTimer(final TimeController controller, final ViewUpdater<Long> updater, long seconds, ASTInterpreterUI interpreter) {
         long currentTime = System.currentTimeMillis();
         TimeCounter counter = new TimeCounter(currentTime, currentTime + seconds*1000, 1000, mHandler) {
             @Override
@@ -40,13 +43,14 @@ public class TimeEngine {
             @Override
             public void onFinished() {
                 updater.updateView(0L);
+                interpreter.stopTimeProcess();
             }
         };
         controller.setTimeCounter(counter);
         mThreadPool.execute(counter);
     }
 
-    public static void startStopwatch(final TimeController controller, final ViewUpdater<Long> updater) {
+    public static void startStopwatch(final TimeController controller, final ViewUpdater<Long> updater, ASTInterpreterUI interpreter) {
         long currentTime = System.currentTimeMillis();
         TimeCounter counter = new TimeCounter(currentTime, 30, mHandler) {
             @Override
@@ -57,6 +61,7 @@ public class TimeEngine {
             @Override
             public void onFinished() {
                 updater.updateView(0L);
+                interpreter.stopTimeProcess();
             }
         };
         controller.setTimeCounter(counter);

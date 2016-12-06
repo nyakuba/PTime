@@ -17,11 +17,15 @@ import ru.spbstu.ptime.constructor.ItemAdapter;
 import ru.spbstu.ptime.constructor.TimeController;
 import ru.spbstu.ptime.constructor.TimeEngine;
 import ru.spbstu.ptime.constructor.ViewUpdater;
+import ru.spbstu.ptime.interpreter.ASTInterpreter;
+import ru.spbstu.ptime.interpreter.ASTInterpreterUI;
+import ru.spbstu.ptime.interpreter.ASTNode;
+import ru.spbstu.ptime.interpreter.ASTStopwatchNode;
 
 /**
  * Stopwatch list item factory
  */
-public class StopwatchItem implements ListItem, ViewUpdater<Long> {
+public class StopwatchItem extends ASTStopwatchNode implements ListItem, ViewUpdater<Long> {
     private final @LayoutRes int mLayoutId = R.layout.stopwatch_item;
     TextView mTextView;
 
@@ -42,10 +46,10 @@ public class StopwatchItem implements ListItem, ViewUpdater<Long> {
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!stopwatch.running()) {
-                    TimeEngine.startStopwatch(stopwatch, updater);
-                }
-                stopwatch.start();
+//                if (!stopwatch.running()) {
+//                    TimeEngine.startStopwatch(stopwatch, updater);
+//                }
+//                stopwatch.start();
             }
         });
 
@@ -61,7 +65,7 @@ public class StopwatchItem implements ListItem, ViewUpdater<Long> {
         btnStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                stopwatch.stop();
+//                stopwatch.stop();
             }
         });
 
@@ -79,11 +83,26 @@ public class StopwatchItem implements ListItem, ViewUpdater<Long> {
     }
 
     @Override
+    public ASTNode interpret(ASTInterpreter interpreter) {
+        final TimeController stopwatch = new TimeController();
+        final ViewUpdater<Long> viewUpdater = this;
+        TimeEngine.startStopwatch(stopwatch, viewUpdater, (ASTInterpreterUI) interpreter);
+        super.interpret(interpreter); /* == interpreter.runStopwatch(); */
+        stopwatch.start();
+        return next;
+    }
+
+    @Override
     public void updateView(Long time) {
         // TODO: get rid of manual time compensation
         // we need to compensate time for three hours
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss.SSS");
         String time_str = formatter.format(new Date(time - 3*3600000));
         mTextView.setText(time_str);
+    }
+
+    @Override
+    public ASTNode getASTNode() {
+        return this;
     }
 }

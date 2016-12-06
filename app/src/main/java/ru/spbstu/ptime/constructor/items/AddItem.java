@@ -84,5 +84,10 @@ public class AddItem implements ListItem {
                     })
                     .show();
         });
+
+        Button btnRun = (Button) layout.findViewById(R.id.btnRun);
+        btnRun.setOnClickListener(view -> {
+
+        });
     }
 }

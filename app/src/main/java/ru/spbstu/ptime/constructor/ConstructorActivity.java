@@ -24,6 +24,7 @@ import java.util.concurrent.locks.Lock;
 import ru.spbstu.ptime.R;
 import ru.spbstu.ptime.constructor.items.StopwatchItem;
 import ru.spbstu.ptime.constructor.items.TimerByIntervalItem;
+import ru.spbstu.ptime.interpreter.Program;
 
 /**
  * Timer program constructor
@@ -58,6 +59,10 @@ public class ConstructorActivity extends Activity {
     private int purpose = PURPOSE_NEW;
     private String filepath;
 
+    private void runProgram(Program p) {
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,7 +79,6 @@ public class ConstructorActivity extends Activity {
         mAdapter = new ItemAdapter(R.layout.constructor_item, R.id.constructor_item);
         makeSampleItems(mAdapter);
         mDragListView.setAdapter(mAdapter, false);
-
         mDragListView.setDragEnabled(true);
         mDragListView.setCanDragHorizontally(false);
         mDragListView.setCanNotDragBelowBottomItem(true);

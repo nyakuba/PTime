@@ -8,7 +8,7 @@ import android.os.Handler;
  */
 
 public abstract class TimeCounter implements Runnable {
-    private Object lock = new Object();
+    private final Object lock = new Object();
     private boolean mStarted = false;
     private boolean mPaused = false;
     private boolean mStopped = false;

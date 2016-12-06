@@ -1,8 +1,8 @@
 package ru.spbstu.ptime.interpreter;
 
 public class ASTLoopNode extends ASTNode {
-    private ASTNode inner;  // Поддерево внутри цикла
-    private int iterations;
+    protected ASTNode inner;  // Поддерево внутри цикла
+    protected int iterations;
 
     public ASTLoopNode(ASTNode inner, int iterations) {
         this.inner = inner;

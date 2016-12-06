@@ -26,6 +26,14 @@
             android:gravity="center_vertical|center_horizontal"
             android:layout_weight="1" />
 
+        <Button
+            android:text="Run"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnRun"
+            android:gravity="center_vertical|center_horizontal"
+            android:layout_weight="1"/>
+
     </LinearLayout>
 
 </LinearLayout>

@@ -1,7 +1,7 @@
 package ru.spbstu.ptime.interpreter;
 
 public class ASTTimerByIntervalNode extends ASTNode {
-    private long seconds;
+    protected long seconds;
 
     public ASTTimerByIntervalNode(long seconds) {
         this.seconds = seconds;
