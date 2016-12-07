@@ -1,7 +1,6 @@
 package ru.spbstu.ptime.constructor.items;
 
 import android.support.annotation.LayoutRes;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -11,11 +10,10 @@ import android.widget.TextView;
 import ru.spbstu.ptime.R;
 import ru.spbstu.ptime.constructor.ItemAdapter;
 import ru.spbstu.ptime.constructor.TimeController;
-import ru.spbstu.ptime.constructor.TimeCounter;
 import ru.spbstu.ptime.constructor.TimeEngine;
 import ru.spbstu.ptime.constructor.ViewUpdater;
 import ru.spbstu.ptime.interpreter.ASTInterpreter;
-import ru.spbstu.ptime.interpreter.ASTInterpreterUI;
+import ru.spbstu.ptime.interpreter.ASTInterpreterRunnable;
 import ru.spbstu.ptime.interpreter.ASTNode;
 import ru.spbstu.ptime.interpreter.ASTTimerByIntervalNode;
 
@@ -84,13 +82,9 @@ public class TimerByIntervalItem extends ASTTimerByIntervalNode implements ListI
         });
     }
 
-    @Override
-    public ASTNode interpret(ASTInterpreter interpreter) {
-        final TimeController timer = new TimeController();
-        final ViewUpdater<Long> viewUpdater = this;
-        TimeEngine.startIntervalTimer(timer, viewUpdater, seconds, (ASTInterpreterUI) interpreter);
-        super.interpret(interpreter); /* == interpreter.runTimer(seconds); */
-        timer.start();
+    public ASTNode interpret(ASTInterpreterRunnable interpreter) {
+        interpreter.setViewUpdater(this);
+        interpreter.runTimer(this);
         return next;
     }
 

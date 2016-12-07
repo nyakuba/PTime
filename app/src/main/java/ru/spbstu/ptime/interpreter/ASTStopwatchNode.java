@@ -5,7 +5,7 @@ public class ASTStopwatchNode extends ASTNode {
 
     @Override
     public ASTNode interpret(ASTInterpreter interpreter) {
-        interpreter.runStopwatch();
+        interpreter.runStopwatch(this);
         return next;
     }
 

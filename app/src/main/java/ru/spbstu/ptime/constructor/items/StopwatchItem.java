@@ -8,9 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
 
 import ru.spbstu.ptime.R;
 import ru.spbstu.ptime.constructor.ItemAdapter;
@@ -18,7 +16,7 @@ import ru.spbstu.ptime.constructor.TimeController;
 import ru.spbstu.ptime.constructor.TimeEngine;
 import ru.spbstu.ptime.constructor.ViewUpdater;
 import ru.spbstu.ptime.interpreter.ASTInterpreter;
-import ru.spbstu.ptime.interpreter.ASTInterpreterUI;
+import ru.spbstu.ptime.interpreter.ASTInterpreterRunnable;
 import ru.spbstu.ptime.interpreter.ASTNode;
 import ru.spbstu.ptime.interpreter.ASTStopwatchNode;
 
@@ -84,13 +82,9 @@ public class StopwatchItem extends ASTStopwatchNode implements ListItem, ViewUpd
         });
     }
 
-    @Override
-    public ASTNode interpret(ASTInterpreter interpreter) {
-        final TimeController stopwatch = new TimeController();
-        final ViewUpdater<Long> viewUpdater = this;
-        TimeEngine.startStopwatch(stopwatch, viewUpdater, (ASTInterpreterUI) interpreter);
-        super.interpret(interpreter); /* == interpreter.runStopwatch(); */
-        stopwatch.start();
+    public ASTNode interpret(ASTInterpreterRunnable interpreter) {
+        interpreter.setViewUpdater(this);
+        interpreter.runStopwatch(this);
         return next;
     }
 

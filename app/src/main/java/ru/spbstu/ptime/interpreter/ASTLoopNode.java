@@ -9,9 +9,19 @@ public class ASTLoopNode extends ASTNode {
         this.iterations = iterations;
     }
 
+    public void setBody(ASTNode body) {
+        this.inner = body;
+    }
+    public ASTNode getBody() {
+        return inner;
+    }
+    public int getIterations() {
+        return iterations;
+    }
+
     @Override
     public ASTNode interpret(ASTInterpreter interpreter) {
-        interpreter.runLoop(inner, iterations);
+        interpreter.runLoop(this);
         return next;
     }
 

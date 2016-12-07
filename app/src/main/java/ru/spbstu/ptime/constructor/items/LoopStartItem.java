@@ -7,18 +7,21 @@ import android.widget.TextView;
 
 import ru.spbstu.ptime.R;
 import ru.spbstu.ptime.constructor.ItemAdapter;
+import ru.spbstu.ptime.interpreter.ASTLoopNode;
+import ru.spbstu.ptime.interpreter.ASTNode;
 
 /**
  * Created by nick_yakuba on 12/5/16.
  */
 
-public class LoopStartItem implements ListItem {
+public class LoopStartItem extends ASTLoopNode implements ListItem {
     private final @LayoutRes int mLayoutId = R.layout.loop_start_item;
     private TextView mTextView;
-    private long mIterations;
+//    private long mIterations;
 
-    public LoopStartItem(long iterations) {
-        mIterations = iterations;
+    public LoopStartItem(int iterations) {
+        super(null, iterations);
+//        mIterations = iterations;
     }
 
     @Override
@@ -31,6 +34,11 @@ public class LoopStartItem implements ListItem {
         LayoutInflater inflater = holder.mInflater;
         LinearLayout layout = (LinearLayout) inflater.inflate(mLayoutId, item, true);
         mTextView = (TextView) layout.findViewById(R.id.text);
-        mTextView.setText(mIterations + " iterations.");
+        mTextView.setText(iterations + " iterations.");
+    }
+
+    @Override
+    public ASTNode getASTNode() {
+        return this;
     }
 }

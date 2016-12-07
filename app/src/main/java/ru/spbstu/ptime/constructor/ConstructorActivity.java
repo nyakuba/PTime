@@ -3,29 +3,23 @@ package ru.spbstu.ptime.constructor;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.os.Handler;
-import android.support.v4.util.Pair;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
-import android.view.View;
 import android.widget.Toast;
 
 import com.woxthebox.draglistview.DragListView;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.locks.Lock;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 import ru.spbstu.ptime.R;
 import ru.spbstu.ptime.constructor.items.LoopEndItem;
 import ru.spbstu.ptime.constructor.items.LoopStartItem;
 import ru.spbstu.ptime.constructor.items.StopwatchItem;
 import ru.spbstu.ptime.constructor.items.TimerByIntervalItem;
+import ru.spbstu.ptime.interpreter.ASTBuilderXML;
+import ru.spbstu.ptime.interpreter.ASTInterpreterRunnable;
+import ru.spbstu.ptime.interpreter.ASTInterpreterUIEdit;
 import ru.spbstu.ptime.interpreter.Program;
 
 /**
@@ -70,16 +64,11 @@ public class ConstructorActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_constructor);
 
-        Intent intent = getIntent();
-        purpose = intent.getIntExtra("purpose", PURPOSE_NEW);
-        if (purpose != PURPOSE_NEW)
-            filepath = intent.getStringExtra("filepath");
-
         final DragListView mDragListView = (DragListView) findViewById(R.id.drag_list_view);
         mDragListView.setLayoutManager(new LinearLayoutManager(this));
 
         mAdapter = new ItemAdapter(R.layout.constructor_item, R.id.constructor_item);
-        makeSampleItems(mAdapter);
+//        makeSampleItems(mAdapter);
         mDragListView.setAdapter(mAdapter, false);
         mDragListView.setDragEnabled(true);
         mDragListView.setCanDragHorizontally(false);
@@ -93,6 +82,31 @@ public class ConstructorActivity extends Activity {
 //                dragView.setBackgroundColor(Color.LTGRAY);
 //            }
 //        });
+
+        Intent intent = getIntent();
+        purpose = intent.getIntExtra("purpose", PURPOSE_NEW);
+        if (purpose != PURPOSE_NEW) {
+            filepath = intent.getStringExtra("filepath");
+            ASTBuilderXML builderXML = new ASTBuilderXML();
+            try {
+                builderXML.build(new FileInputStream(filepath));
+            }
+            catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            Program program = builderXML.getProgram();
+            if (program != null)
+                new ASTInterpreterUIEdit(mAdapter).run(program);
+            else
+                Toast.makeText(this, "null program :C", Toast.LENGTH_LONG).show();
+            if (purpose == PURPOSE_RUN) {
+                if (null != program)
+                    new Thread(new ASTInterpreterRunnable(program)).start();
+                else
+                    new AlertDialog.Builder(this).setTitle(":C").show();
+            }
+        }
+
     }
 
     @Override
@@ -139,7 +153,7 @@ public class ConstructorActivity extends Activity {
     private void makeSampleItems(ItemAdapter adapter) {
         adapter.addItem(new TimerByIntervalItem(10L));
         adapter.addItem(new StopwatchItem());
-        adapter.addItem(new LoopStartItem(3L));
+        adapter.addItem(new LoopStartItem(3));
         adapter.addItem(new TimerByIntervalItem(5L));
         adapter.addItem(new LoopEndItem());
     }

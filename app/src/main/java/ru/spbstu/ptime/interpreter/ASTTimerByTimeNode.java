@@ -9,9 +9,13 @@ public class ASTTimerByTimeNode extends ASTNode {
         this.date = date;
     }
 
+    public Date getDate() {
+        return date;
+    }
+
     @Override
     public ASTNode interpret(ASTInterpreter interpreter) {
-        interpreter.runTimer(this.date);
+        interpreter.runTimer(this);
         return next;
     }
 

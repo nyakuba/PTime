@@ -7,7 +7,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import ru.spbstu.ptime.interpreter.ASTInterpreter;
-import ru.spbstu.ptime.interpreter.ASTInterpreterUI;
+import ru.spbstu.ptime.interpreter.ASTInterpreterRunnable;
 
 public class TimeEngine {
     private static int NUMBER_OF_CORES = Runtime.getRuntime().availableProcessors();
@@ -27,7 +27,7 @@ public class TimeEngine {
     // no instances of TimeEngine is allowed
     private TimeEngine() { }
 
-    public static void startIntervalTimer(final TimeController controller, final ViewUpdater<Long> updater, long seconds, ASTInterpreterUI interpreter) {
+    public static void startIntervalTimer(final TimeController controller, final ViewUpdater<Long> updater, long seconds, ASTInterpreterRunnable interpreter) {
         long currentTime = System.currentTimeMillis();
         TimeCounter counter = new TimeCounter(currentTime, currentTime + seconds*1000, 1000, mHandler) {
             @Override
@@ -50,7 +50,7 @@ public class TimeEngine {
         mThreadPool.execute(counter);
     }
 
-    public static void startStopwatch(final TimeController controller, final ViewUpdater<Long> updater, ASTInterpreterUI interpreter) {
+    public static void startStopwatch(final TimeController controller, final ViewUpdater<Long> updater, ASTInterpreterRunnable interpreter) {
         long currentTime = System.currentTimeMillis();
         TimeCounter counter = new TimeCounter(currentTime, 30, mHandler) {
             @Override

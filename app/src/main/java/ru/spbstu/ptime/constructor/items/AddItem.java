@@ -2,7 +2,6 @@ package ru.spbstu.ptime.constructor.items;
 
 import android.content.DialogInterface;
 import android.support.annotation.LayoutRes;
-import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,10 +11,15 @@ import android.widget.LinearLayout;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
+import java.io.PrintStream;
 
 import ru.spbstu.ptime.R;
 import ru.spbstu.ptime.constructor.ItemAdapter;
+import ru.spbstu.ptime.interpreter.ASTBuilderUI;
+import ru.spbstu.ptime.interpreter.ASTInterpreterRunnable;
+import ru.spbstu.ptime.interpreter.ASTInterpreterXML;
+import ru.spbstu.ptime.interpreter.ASTNode;
+import ru.spbstu.ptime.interpreter.Program;
 
 /**
  * Created by nick_yakuba on 11/13/16.
@@ -47,7 +51,7 @@ public class AddItem implements ListItem {
                         adapter.addItem(new StopwatchItem());
                         break;
                     case 2: // loop
-                        adapter.addItem(new LoopStartItem(3L));
+                        adapter.addItem(new LoopStartItem(3));
                         adapter.addItem(new LoopEndItem());
                         break;
                     default: // do nothing
@@ -77,7 +81,9 @@ public class AddItem implements ListItem {
                             final String name = editText.getText().toString();
                             File filesDir = new File(item.getContext().getFilesDir().getAbsolutePath() + "/programs");
                             try {
-                                new File(filesDir.getAbsolutePath() + '/' + name + ".xml").createNewFile();
+                                File file = new File(filesDir.getAbsolutePath() + '/' + name + ".xml");
+                                Program program = new ASTBuilderUI(adapter.getItemList()).getProgram();
+                                new ASTInterpreterXML(new PrintStream(file)).run(program);
                             }
                             catch (IOException e) {
                                 e.printStackTrace();
@@ -90,7 +96,16 @@ public class AddItem implements ListItem {
 
         Button btnRun = (Button) layout.findViewById(R.id.btnRun);
         btnRun.setOnClickListener(view -> {
-
+            Program program = new ASTBuilderUI(adapter.getItemList()).getProgram();
+            if (null != program)
+                new Thread(new ASTInterpreterRunnable(program)).start();
+            else
+                new AlertDialog.Builder(item.getContext()).setTitle(":C").show();
         });
+    }
+
+    @Override
+    public ASTNode getASTNode() {
+        return null;
     }
 }

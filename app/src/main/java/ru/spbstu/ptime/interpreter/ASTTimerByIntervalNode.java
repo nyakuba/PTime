@@ -7,9 +7,13 @@ public class ASTTimerByIntervalNode extends ASTNode {
         this.seconds = seconds;
     }
 
+    public long getSeconds() {
+        return seconds;
+    }
+
     @Override
     public ASTNode interpret(ASTInterpreter interpreter) {
-        interpreter.runTimer(this.seconds);
+        interpreter.runTimer(this);
         return next;
     }
 

@@ -7,15 +7,18 @@ import android.widget.TextView;
 
 import ru.spbstu.ptime.R;
 import ru.spbstu.ptime.constructor.ItemAdapter;
+import ru.spbstu.ptime.interpreter.ASTInterpreter;
+import ru.spbstu.ptime.interpreter.ASTLoopNode;
+import ru.spbstu.ptime.interpreter.ASTNode;
 
 /**
  * Created by nick_yakuba on 12/5/16.
  */
 
-public class LoopEndItem implements ListItem {
+public class LoopEndItem extends ASTNode implements ListItem {
     private final @LayoutRes int mLayoutId = R.layout.loop_end_item;
-    private TextView mTextView;
-    private long mIterations;
+//    private TextView mTextView;
+//    private long mIterations;
 
     @Override
     public void initializeLayout(Long id, ItemAdapter.ViewHolder holder, ItemAdapter adapter) {
@@ -26,5 +29,15 @@ public class LoopEndItem implements ListItem {
         item.removeAllViews();
         LayoutInflater inflater = holder.mInflater;
         LinearLayout layout = (LinearLayout) inflater.inflate(mLayoutId, item, true);
+    }
+
+    @Override
+    public ASTNode interpret(ASTInterpreter interpreter) {
+        return next;
+    }
+
+    @Override
+    public ASTNode getASTNode() {
+        return this;
     }
 }

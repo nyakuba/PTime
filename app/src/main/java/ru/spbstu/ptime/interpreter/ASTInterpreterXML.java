@@ -2,10 +2,12 @@ package ru.spbstu.ptime.interpreter;
 
 import java.io.PrintStream;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class ASTInterpreterXML implements ASTInterpreter {
-    private static DateFormat DATE_FORMAT = ASTBuilderXML.DATE_FORMAT;
+    private static DateFormat DATE_FORMAT = new SimpleDateFormat("HH:mm:ss",Locale.ENGLISH);
     private String indent;
     private PrintStream stream;
     public ASTInterpreterXML() {
@@ -15,29 +17,26 @@ public class ASTInterpreterXML implements ASTInterpreter {
         indent = "";
         this.stream = stream;
     }
-    public void setStream(PrintStream stream) {
-        this.stream = stream;
+    public void runTimer(ASTTimerByTimeNode timerNode) {
+        stream.format("%s<timer time=\"%s\"/>%n", indent, DATE_FORMAT.format(timerNode.getDate()));
     }
-    public void runTimer(Date date) {
-        stream.format("%s<timer time=\"%s\"/>%n", indent, DATE_FORMAT.format(date));
+    public void runTimer(ASTTimerByIntervalNode timerNode) {
+        stream.format("%s<timer interval=\"%d\"/>%n", indent, timerNode.getSeconds());
     }
-    public void runTimer(long seconds) {
-        stream.format("%s<timer interval=\"%d\"/>%n", indent, seconds);
-    }
-    public void runStopwatch() {
+    public void runStopwatch(ASTStopwatchNode stopwatchNode) {
         stream.format("%s<stopwatch/>%n", indent);
     }
-    public void runLoop(ASTNode body, int iterations) {
-        stream.format("%s<loop iterations=\"%d\"/>%n", indent, iterations);
-        run(body);
+//    public void stopTimeProcess() {}
+    public void runLoop(ASTLoopNode loopNode) {
+        stream.format("%s<loop iterations=\"%d\"/>%n", indent, loopNode.getIterations());
+        run(loopNode.getBody());
         stream.format("%s</loop>%n", indent);
     }
     public void run(ASTNode body) {
         String oldIndent = indent;
         indent = "    " + indent;
-        ASTNode cur = body;
-        while (null != cur)
-            cur = cur.interpret(this);
+        while (null != body)
+            body = body.interpret(this);
         indent = oldIndent;
     }
     public void run(Program program) {
@@ -45,5 +44,7 @@ public class ASTInterpreterXML implements ASTInterpreter {
         stream.format("<program name=\"%s\">%n", program.getName());
         run(program.getBody());
         stream.println("</program>");
+        stream.flush();
+        stream.close();
     }
 }

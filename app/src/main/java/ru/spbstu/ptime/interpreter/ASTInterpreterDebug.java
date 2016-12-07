@@ -23,22 +23,24 @@ public class ASTInterpreterDebug implements ASTInterpreter {
             System.out.println("Cannot open file " + args[0]);
         }
     }
-    public void runTimer(Date date) {
-        System.out.printf("Timer [Date = %s]\n", date);
+    public void runTimer(ASTTimerByTimeNode timerNode) {
+        System.out.printf("Timer [Date = %s]\n", timerNode.getDate());
     }
-    public void runTimer(long seconds) {
-        System.out.printf("Time [Interval = %d seconds]\n", seconds);
+    public void runTimer(ASTTimerByIntervalNode timerNode) {
+        System.out.printf("Time [Interval = %d seconds]\n", timerNode.getSeconds());
     }
-    public void runStopwatch() {
+    public void runStopwatch(ASTStopwatchNode stopwatchNode) {
         System.out.print("Stopwatch\n");
     }
-    public void runLoop(ASTNode body, int iterations) {
+//    public void stopTimeProcess() {}
+    public void runLoop(ASTLoopNode loopNode) {
+        int iterations = loopNode.getIterations();
         if (iterations == -1)
             while (true)
-                run(body);
+                run(loopNode.getBody());
         else
             while (-1 != --iterations)
-                run(body);
+                run(loopNode.getBody());
     }
     public void run(ASTNode body) {
         ASTNode cur = body;

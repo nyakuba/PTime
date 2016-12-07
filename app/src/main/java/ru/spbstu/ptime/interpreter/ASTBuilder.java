@@ -1,5 +1,5 @@
 package ru.spbstu.ptime.interpreter;
 
-public interface ASTBuilder {
+interface ASTBuilder {
     Program getProgram();
 }
