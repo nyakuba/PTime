@@ -1,7 +1,7 @@
 package ru.spbstu.ptime;
 
 import android.app.Activity;
-//import android.graphics.Typeface;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
