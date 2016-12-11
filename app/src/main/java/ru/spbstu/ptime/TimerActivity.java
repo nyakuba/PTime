@@ -246,6 +246,8 @@ public class TimerActivity extends Activity {
 
     // состояние остановки работы Activity
     protected void onStop() {
+        if (isSetTimeDialog)
+            mTimePicker.cancel();
         if (isSoundPlaying)
             timerSoundMP.stop();
         super.onStop();
