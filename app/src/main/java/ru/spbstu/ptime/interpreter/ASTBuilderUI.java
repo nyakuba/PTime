@@ -1,5 +1,6 @@
 package ru.spbstu.ptime.interpreter;
 
+import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 import android.support.v4.widget.EdgeEffectCompat;
 
@@ -8,68 +9,60 @@ import java.util.List;
 import ru.spbstu.ptime.constructor.ItemAdapter;
 import ru.spbstu.ptime.constructor.items.ListItem;
 import ru.spbstu.ptime.constructor.items.LoopEndItem;
-import ru.spbstu.ptime.constructor.items.LoopStartItem;
+//import ru.spbstu.ptime.constructor.items.LoopStartItem;
 
 /**
  * Created by venedikttsulenev on 06/12/16.
  */
 
-class ASTBuilderUIException extends Exception {}
-
 public class ASTBuilderUI implements ASTBuilder {
     private Program program;
-
-    /* index = [index of loopNode (LoopStartItem) in list] + 1 (first in loop body) */
-    private Pair<ASTNode, Integer> parseLoopBody(ASTLoopNode loopNode, List<Pair<Long, ListItem>> itemList, int index) throws ASTBuilderUIException {
-        ListItem beg = itemList.get(index).second, curr = beg;
+    private List<Pair<Long, ListItem>> itemList;
+    private Pair<ASTNode, Integer> parseTillNull(int index) { /* index = [index of loopNode (LoopStartItem) in list] + 1 (first in loop body) */
+        ASTNode begin = itemList.get(index).second.getASTNode();
+        if (begin == null)
+            return new Pair<>(null, index + 1);
         int i;
-        for (i = index + 1; !(curr instanceof LoopEndItem); ++i) {
-            if (curr instanceof LoopStartItem) {
-                Pair<ASTNode, Integer> pair = parseLoopBody((ASTLoopNode) curr.getASTNode(), itemList, i);
-                ASTNode body = pair.first;
+        ASTNode currAST, prevAST = begin;
+        for (i = index + 1; null != (currAST = itemList.get(i).second.getASTNode()); ++i) {
+            if (currAST instanceof ASTLoopNode) {
+                Pair<ASTNode, Integer> pair = parseTillNull(i + 1);
+                ((ASTLoopNode) currAST).setBody(pair.first);
                 i = pair.second;
-                ((LoopStartItem) curr).setBody(body);
-                if (i == itemList.size() - 1)
-                    throw new ASTBuilderUIException();
             }
-            ListItem next = itemList.get(i).second;
-            curr.getASTNode().setNext(next.getASTNode());
-            curr = next;
+            prevAST.setNext(currAST);
+            prevAST = currAST;
         }
-        ((LoopEndItem) curr).setNext(null);
-        return new Pair<ASTNode, Integer>(beg.getASTNode(), i + 1);
+        return new Pair<>(begin, i + 1);
     }
-
-    private ASTNode parse(List<Pair<Long, ListItem>> itemList) throws ASTBuilderUIException {
-        ListItem beg = itemList.get(0).second, curr = beg;
-        for (int i = 1; i < itemList.size() - 1; ++i) {
-            if (curr instanceof LoopStartItem) {
-                Pair<ASTNode, Integer> pair = parseLoopBody((ASTLoopNode) curr.getASTNode(), itemList, i);
+    private ASTNode parse(int index) {
+        ASTNode beg = itemList.get(index).second.getASTNode();
+        if (beg == null)
+            return null;
+        ASTNode curr = beg;
+        for (int i = index + 1; curr != null && i < itemList.size() - 1; ++i) {
+            if (curr instanceof ASTLoopNode) {
+                Pair<ASTNode, Integer> pair = parseTillNull(i);
                 ASTNode body = pair.first;
                 i = pair.second;
-                ((LoopStartItem) curr).setBody(body);
-                if (i == itemList.size())
-                    throw new ASTBuilderUIException();
+                ((ASTLoopNode) curr).setBody(body);
             }
-            ListItem next = itemList.get(i).second;
-            ASTNode currAST = curr.getASTNode();
-//            if (null != currAST)
-                currAST.setNext(next.getASTNode());
+            ASTNode next = itemList.get(i).second.getASTNode();
+            curr.setNext(next);
             curr = next;
         }
-//        curr.getASTNode().setNext(null);
-        return beg.getASTNode();
+        /* curr.setNext(null); */
+        /* .next of any ASTNode is null by default. So curr.next == null, as needed. */
+        return beg;
     }
 
     public ASTBuilderUI(List<Pair<Long, ListItem>> itemList) {
-        try {
-            ASTNode root = parse(itemList);
-            if (null != root)
-                program = new Program("Untitled", root);
-
-        } catch (ASTBuilderUIException e) {
+        this.itemList = itemList;
+        ASTNode root = parse(0);
+        if (null != root)
+            program = new Program("Untitled", root);
+        else
             program = null;
-        }
     }
 
     @Override

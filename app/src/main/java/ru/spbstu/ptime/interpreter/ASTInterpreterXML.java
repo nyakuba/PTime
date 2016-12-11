@@ -26,9 +26,8 @@ public class ASTInterpreterXML implements ASTInterpreter {
     public void runStopwatch(ASTStopwatchNode stopwatchNode) {
         stream.format("%s<stopwatch/>%n", indent);
     }
-//    public void stopTimeProcess() {}
     public void runLoop(ASTLoopNode loopNode) {
-        stream.format("%s<loop iterations=\"%d\"/>%n", indent, loopNode.getIterations());
+        stream.format("%s<loop iterations=\"%d\">%n", indent, loopNode.getIterations());
         run(loopNode.getBody());
         stream.format("%s</loop>%n", indent);
     }

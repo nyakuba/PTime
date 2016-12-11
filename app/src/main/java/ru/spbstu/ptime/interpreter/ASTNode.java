@@ -1,10 +1,20 @@
 package ru.spbstu.ptime.interpreter;
 
-abstract public class ASTNode {
+import android.support.annotation.LayoutRes;
+import android.widget.TextView;
+
+import ru.spbstu.ptime.R;
+import ru.spbstu.ptime.constructor.items.ListItem;
+
+abstract public class ASTNode implements ListItem {
     private static final int hash = (int) (Math.random() * Long.MAX_VALUE);
     protected ASTNode next;
 
-    public ASTNode() {
+    protected final @LayoutRes int mLayoutId;
+    protected TextView mTextView;
+
+    public ASTNode(int mLayoutId) {
+        this.mLayoutId = mLayoutId;
         this.next = null;
     }
 

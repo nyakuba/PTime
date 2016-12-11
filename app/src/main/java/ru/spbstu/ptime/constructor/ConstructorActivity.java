@@ -14,12 +14,15 @@ import java.io.FileNotFoundException;
 
 import ru.spbstu.ptime.R;
 import ru.spbstu.ptime.constructor.items.LoopEndItem;
-import ru.spbstu.ptime.constructor.items.LoopStartItem;
-import ru.spbstu.ptime.constructor.items.StopwatchItem;
-import ru.spbstu.ptime.constructor.items.TimerByIntervalItem;
+//import ru.spbstu.ptime.constructor.items.LoopStartItem;
+//import ru.spbstu.ptime.constructor.items.StopwatchItem;
+//import ru.spbstu.ptime.constructor.items.TimerByIntervalItem;
 import ru.spbstu.ptime.interpreter.ASTBuilderXML;
 import ru.spbstu.ptime.interpreter.ASTInterpreterRunnable;
 import ru.spbstu.ptime.interpreter.ASTInterpreterUIEdit;
+import ru.spbstu.ptime.interpreter.ASTLoopNode;
+import ru.spbstu.ptime.interpreter.ASTStopwatchNode;
+import ru.spbstu.ptime.interpreter.ASTTimerByIntervalNode;
 import ru.spbstu.ptime.interpreter.Program;
 
 /**
@@ -106,7 +109,8 @@ public class ConstructorActivity extends Activity {
                     new AlertDialog.Builder(this).setTitle(":C").show();
             }
         }
-
+        else
+            makeSampleItems(mAdapter);
     }
 
     @Override
@@ -151,10 +155,15 @@ public class ConstructorActivity extends Activity {
     }
 
     private void makeSampleItems(ItemAdapter adapter) {
-        adapter.addItem(new TimerByIntervalItem(10L));
-        adapter.addItem(new StopwatchItem());
-        adapter.addItem(new LoopStartItem(3));
-        adapter.addItem(new TimerByIntervalItem(5L));
+        adapter.addItem(new ASTTimerByIntervalNode(10L));
+        adapter.addItem(new ASTStopwatchNode());
+        adapter.addItem(new ASTLoopNode(3));
+        adapter.addItem(new ASTTimerByIntervalNode(5L));
         adapter.addItem(new LoopEndItem());
+//        adapter.addItem(new TimerByIntervalItem(10L));
+//        adapter.addItem(new StopwatchItem());
+//        adapter.addItem(new LoopStartItem(3));
+//        adapter.addItem(new TimerByIntervalItem(5L));
+//        adapter.addItem(new LoopEndItem());
     }
 }

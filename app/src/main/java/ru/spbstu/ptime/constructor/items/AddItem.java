@@ -16,9 +16,13 @@ import java.io.PrintStream;
 import ru.spbstu.ptime.R;
 import ru.spbstu.ptime.constructor.ItemAdapter;
 import ru.spbstu.ptime.interpreter.ASTBuilderUI;
+import ru.spbstu.ptime.interpreter.ASTInterpreter;
 import ru.spbstu.ptime.interpreter.ASTInterpreterRunnable;
 import ru.spbstu.ptime.interpreter.ASTInterpreterXML;
+import ru.spbstu.ptime.interpreter.ASTLoopNode;
 import ru.spbstu.ptime.interpreter.ASTNode;
+import ru.spbstu.ptime.interpreter.ASTStopwatchNode;
+import ru.spbstu.ptime.interpreter.ASTTimerByIntervalNode;
 import ru.spbstu.ptime.interpreter.Program;
 
 /**
@@ -45,13 +49,13 @@ public class AddItem implements ListItem {
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case 0: // timer
-                        adapter.addItem(new TimerByIntervalItem(10L));
+                        adapter.addItem(new /*TimerByIntervalItem*/ASTTimerByIntervalNode(10L));
                         break;
                     case 1: // stopwatch
-                        adapter.addItem(new StopwatchItem());
+                        adapter.addItem(new /*StopwatchItem*/ASTStopwatchNode());
                         break;
                     case 2: // loop
-                        adapter.addItem(new LoopStartItem(3));
+                        adapter.addItem(new /*LoopStartItem*/ASTLoopNode(3));
                         adapter.addItem(new LoopEndItem());
                         break;
                     default: // do nothing
@@ -83,7 +87,9 @@ public class AddItem implements ListItem {
                             try {
                                 File file = new File(filesDir.getAbsolutePath() + '/' + name + ".xml");
                                 Program program = new ASTBuilderUI(adapter.getItemList()).getProgram();
-                                new ASTInterpreterXML(new PrintStream(file)).run(program);
+                                ASTInterpreterXML interpreterXML = new ASTInterpreterXML(new PrintStream(file));
+                                interpreterXML.run(program);
+//                                new ASTInterpreterXML(new PrintStream(file)).run(program);
                             }
                             catch (IOException e) {
                                 e.printStackTrace();

@@ -18,7 +18,8 @@ import java.util.List;
 import ru.spbstu.ptime.constructor.items.AddItem;
 import ru.spbstu.ptime.constructor.items.ListItem;
 import ru.spbstu.ptime.constructor.items.LoopEndItem;
-import ru.spbstu.ptime.constructor.items.LoopStartItem;
+//import ru.spbstu.ptime.constructor.items.LoopStartItem;
+import ru.spbstu.ptime.interpreter.ASTLoopNode;
 
 /**
  * ItemAdapter represent a factory instance to create draggable list items from given dataset
@@ -86,13 +87,13 @@ public class ItemAdapter extends DragItemAdapter<Pair<Long, ListItem>, ItemAdapt
         int level = 0;
         while (iterator.hasNext()) {
             Pair<Long, ListItem> pair = iterator.next();
-            if (pair.second instanceof LoopEndItem) {
+            if (pair.second instanceof ASTLoopNode) {
                 --level;
             }
             if (pair.first.equals(id)) {
                 break;
             }
-            if (pair.second instanceof LoopStartItem) {
+            if (pair.second instanceof ASTLoopNode) {
                 ++level;
             }
         }

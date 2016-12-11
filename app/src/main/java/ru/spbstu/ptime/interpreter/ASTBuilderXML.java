@@ -109,6 +109,8 @@ public class ASTBuilderXML implements ASTBuilder {
             DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             Document doc = dBuilder.parse(stream);
             Node xmlNode = doc.getDocumentElement();
+            if (xmlNode == null)
+                throw new ASTBuilderXMLException();
             if (!"program".equals(xmlNode.getNodeName()) || !xmlNode.hasAttributes())
                 throw new ASTBuilderXMLException(); /* Первый тег -- не <program> */
             Attr attribute = (Attr) xmlNode.getAttributes().item(0);

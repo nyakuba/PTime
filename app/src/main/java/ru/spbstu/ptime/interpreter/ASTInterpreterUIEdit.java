@@ -4,9 +4,9 @@ import java.util.Date;
 
 import ru.spbstu.ptime.constructor.ItemAdapter;
 import ru.spbstu.ptime.constructor.items.LoopEndItem;
-import ru.spbstu.ptime.constructor.items.LoopStartItem;
-import ru.spbstu.ptime.constructor.items.StopwatchItem;
-import ru.spbstu.ptime.constructor.items.TimerByIntervalItem;
+//import ru.spbstu.ptime.constructor.items.LoopStartItem;
+//import ru.spbstu.ptime.constructor.items.StopwatchItem;
+//import ru.spbstu.ptime.constructor.items.TimerByIntervalItem;
 import ru.spbstu.ptime.interpreter.ASTInterpreter;
 
 /**
@@ -22,13 +22,13 @@ public class ASTInterpreterUIEdit implements ASTInterpreter {
         // ...
     }
     public void runTimer(ASTTimerByIntervalNode timerNode) {
-        itemAdapter.addItem(new TimerByIntervalItem(timerNode.getSeconds()));
+        itemAdapter.addItem(new /*TimerByIntervalItem*/ASTTimerByIntervalNode(timerNode.getSeconds()));
     }
     public void runStopwatch(ASTStopwatchNode stopwatchNode) {
-        itemAdapter.addItem(new StopwatchItem());
+        itemAdapter.addItem(new /*StopwatchItem*/ASTStopwatchNode());
     }
     public void runLoop(ASTLoopNode loopNode) {
-        itemAdapter.addItem(new LoopStartItem(loopNode.getIterations()));
+        itemAdapter.addItem(new /*LoopStartItem*/ASTLoopNode(loopNode.getIterations()));
         run(loopNode.getBody());
         itemAdapter.addItem(new LoopEndItem());
     }
