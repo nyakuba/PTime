@@ -3,6 +3,7 @@ package ru.spbstu.ptime;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
@@ -12,6 +13,8 @@ import android.widget.Chronometer;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import java.util.Timer;
+
 public class TimerActivity extends Activity {
 
     private Button timerBtnStart, timerBtnSetTime, timerBtnStop;
@@ -19,9 +22,11 @@ public class TimerActivity extends Activity {
     private ProgressBar timerProgressBar;
     private AlertDialog alert;
     private MyTimePickerDialog mTimePicker;
+    private MediaPlayer timerSoundMP;
 
     int defaultColor;   // костыль для изменения цвета "00:00:00"
 
+    private boolean isSoundPlaying = false;
     private boolean isAlertShowing = false;
     private boolean isSetTimeDialog = false;
     int currTimePickerHour = 0;
@@ -79,6 +84,9 @@ public class TimerActivity extends Activity {
 
         timer.setOnChronometerTickListener(timerListner);
 
+        timerSoundMP = MediaPlayer.create(TimerActivity.this, R.raw.lg_timer);
+        timerSoundMP.setLooping(true);
+
         // создаем диалоговое окно, сообщающее о завершении таймера
         AlertDialog.Builder builder = new AlertDialog.Builder(TimerActivity.this);
         builder.setTitle("Timer")
@@ -89,6 +97,8 @@ public class TimerActivity extends Activity {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
                                 isAlertShowing = false;
+                                timerSoundMP.stop();
+                                isSoundPlaying = false;
                             }
                         });
         alert = builder.create();
@@ -114,17 +124,19 @@ public class TimerActivity extends Activity {
                     timer.setText(MillisesondsToString(fullTimerTimeInMillis)); // устанавливаем начальную строку таймера
                     timerProgressBar.setProgress(0);    // сбрасываем ProgressBar
                     currTimerTimeInMillis = fullTimerTimeInMillis;
+                    timerBtnStart.setEnabled(true);
+                    timerBtnSetTime.setEnabled(true);
+                    timerBtnStop.setEnabled(false);
                 }
                 // если на этот "тик" таймер досшел до 00:00:00
                 else if (currTimerTimeInMillis < 1000)
                 {
                     timer.setTextColor(getResources().getColor(R.color.colorAccent));       // выделяем 00:00:00 цветом
+                    timerSoundMP.start();
+                    isSoundPlaying = true;
                     timerProgressBar.setProgress(timerProgressBar.getMax());                // прогресс-бар дошел до конца
                     alert.show();   // отображаем диалоговое окно
                     isAlertShowing = true;
-                    timerBtnStart.setEnabled(true);
-                    timerBtnSetTime.setEnabled(true);
-                    timerBtnStop.setEnabled(false);
                 }
             }
         };
@@ -162,6 +174,7 @@ public class TimerActivity extends Activity {
         timerBtnSetTime.setEnabled(savedInstanceState.getBoolean("enBtnSetTime"));
         timerBtnStop.setEnabled(savedInstanceState.getBoolean("enBtnStop"));
         isAlertShowing = savedInstanceState.getBoolean("isAlertShowing");
+        isSoundPlaying = savedInstanceState.getBoolean("isSoundPlaying");
         isSetTimeDialog = savedInstanceState.getBoolean("isSetTimeDilog");
         if (isSetTimeDialog) {
             currTimePickerHour = savedInstanceState.getInt("currTimePickerHour");
@@ -181,6 +194,8 @@ public class TimerActivity extends Activity {
 
         if (isAlertShowing)
             alert.show();
+        if (isSoundPlaying)
+            timerSoundMP.start();
 
         if (isSetTimeDialog){
             mTimePicker = new MyTimePickerDialog(this, new MyTimePickerDialog.OnTimeSetListener() {
@@ -203,6 +218,7 @@ public class TimerActivity extends Activity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean("isAlertShowing", isAlertShowing);
+        outState.putBoolean("isSoundPlaying", isSoundPlaying);
         outState.putBoolean("isSetTimeDilog", isSetTimeDialog);
         if (isSetTimeDialog){
             outState.putInt("currTimePickerHour", mTimePicker.getmInitialHourOfDay());
@@ -230,6 +246,10 @@ public class TimerActivity extends Activity {
 
     // состояние остановки работы Activity
     protected void onStop() {
+        if (isSetTimeDialog)
+            mTimePicker.cancel();
+        if (isSoundPlaying)
+            timerSoundMP.stop();
         super.onStop();
         Log.d(LOG_TAG, "TimerOnStop");
     }
