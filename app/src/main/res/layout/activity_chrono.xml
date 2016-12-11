@@ -44,14 +44,15 @@
     </LinearLayout>
 
     <Chronometer
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/chronometer"
         android:keepScreenOn="false"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="30dp"
         android:textAlignment="center"
-        android:textSize="80sp" />
+        android:textSize="80sp"
+        android:text="@string/start_time" />
 
 </RelativeLayout>
