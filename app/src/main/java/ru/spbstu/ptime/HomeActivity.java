@@ -7,6 +7,7 @@ import android.view.MotionEvent;
 import android.widget.TabHost;
 
 import ru.spbstu.ptime.constructor.ConstructorActivity;
+import ru.spbstu.ptime.constructor.TimeEngine;
 
 public class HomeActivity extends TabActivity {
 
@@ -36,6 +37,8 @@ public class HomeActivity extends TabActivity {
         tabSpec.setIndicator("Timer");
         tabSpec.setContent(new Intent(this, TimerActivity.class));
         tabHost.addTab(tabSpec);
+
+        TimeEngine.prepare(); /* Initialize TimeEngine. */
     }
 
     @Override

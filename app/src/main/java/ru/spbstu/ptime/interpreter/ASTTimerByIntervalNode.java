@@ -14,10 +14,16 @@ import ru.spbstu.ptime.constructor.items.ListItem;
 
 public class ASTTimerByIntervalNode extends ASTNode implements ViewUpdater<Long> {
     private long seconds;
+    private final TimeController timeController;
 
     public ASTTimerByIntervalNode(long seconds) {
         super(R.layout.timer_by_interval_item);
+        timeController = new TimeController();
         this.seconds = seconds;
+    }
+
+    public TimeController getTimeController() {
+        return timeController;
     }
 
     public long getSeconds() {
@@ -56,8 +62,6 @@ public class ASTTimerByIntervalNode extends ASTNode implements ViewUpdater<Long>
         mTextView.setText(seconds + " sec. finished");
 
         Button btnStart = (Button) layout.findViewById(R.id.btnStart);
-        final TimeController timer = new TimeController();
-        final ViewUpdater<Long> updater = this;
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,7 +76,7 @@ public class ASTTimerByIntervalNode extends ASTNode implements ViewUpdater<Long>
         btnPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                timer.pause();
+                timeController.pause();
             }
         });
 
@@ -80,7 +84,7 @@ public class ASTTimerByIntervalNode extends ASTNode implements ViewUpdater<Long>
         btnStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                timer.stop();
+                timeController.stop();
             }
         });
 
@@ -88,7 +92,7 @@ public class ASTTimerByIntervalNode extends ASTNode implements ViewUpdater<Long>
         btnDel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                timer.stop();
+                timeController.stop();
                 boolean removed = adapter.removeItemByID(id);
                 if (removed) {
                     adapter.notifyDataSetChanged();

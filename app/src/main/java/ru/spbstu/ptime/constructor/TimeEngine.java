@@ -22,7 +22,11 @@ public class TimeEngine {
             KEEP_ALIVE_TIME,
             KEEP_ALIVE_TIME_UNIT,
             mWorkQueue);
-    private static final Handler mHandler = new Handler();
+    private static /*final*/ Handler mHandler;// = new Handler();
+
+    public static void prepare() { /* This method should be called once from UI thread before using TimeEngine. */
+        mHandler = new Handler();
+    }
 
     // no instances of TimeEngine is allowed
     private TimeEngine() { }

@@ -18,9 +18,15 @@ import ru.spbstu.ptime.constructor.items.ListItem;
 
 public class ASTStopwatchNode extends ASTNode implements ViewUpdater<Long> {
     private static final int hash = (int) (Math.random() * Long.MAX_VALUE);
+    private final TimeController timeController;
 
     public ASTStopwatchNode() {
         super(R.layout.stopwatch_item);
+        timeController = new TimeController();
+    }
+
+    public TimeController getTimeController() {
+        return timeController;
     }
 
     @Override
@@ -53,8 +59,6 @@ public class ASTStopwatchNode extends ASTNode implements ViewUpdater<Long> {
         updateView(0L);
 
         Button btnStart = (Button) layout.findViewById(R.id.btnStart);
-        final TimeController stopwatch = new TimeController();
-        final ViewUpdater<Long> updater = this;
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,7 +73,7 @@ public class ASTStopwatchNode extends ASTNode implements ViewUpdater<Long> {
         btnPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                stopwatch.pause();
+                timeController.pause();
             }
         });
 
@@ -77,7 +81,7 @@ public class ASTStopwatchNode extends ASTNode implements ViewUpdater<Long> {
         btnStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                stopwatch.stop();
+                timeController.stop();
             }
         });
 
@@ -85,7 +89,7 @@ public class ASTStopwatchNode extends ASTNode implements ViewUpdater<Long> {
         btnDel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                stopwatch.stop();
+                timeController.stop();
                 boolean removed = adapter.removeItemByID(id);
                 if (removed) {
                     adapter.notifyDataSetChanged();

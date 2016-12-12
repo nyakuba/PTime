@@ -7,19 +7,15 @@ import ru.spbstu.ptime.constructor.ViewUpdater;
 public class ASTInterpreterRunnable implements ASTInterpreter, Runnable {
     private Program program;
     private final Object lock = new Object();
-//    private ViewUpdater<Long> viewUpdater;
     public ASTInterpreterRunnable(Program program) {
         this.program = program;
     }
-//    public void setViewUpdater(ViewUpdater<Long> viewUpdater) {
-//        this.viewUpdater = viewUpdater;
-//    }
     public void runTimer(ASTTimerByTimeNode timerNode) {
         // ...
     }
     public void runTimer(ASTTimerByIntervalNode timerItem) {
         synchronized (lock) {
-            final TimeController timer = new TimeController();
+            final TimeController timer = timerItem.getTimeController();
             TimeEngine.startIntervalTimer(timer, timerItem, timerItem.getSeconds(), this);
             timer.start();
             try {
@@ -32,7 +28,7 @@ public class ASTInterpreterRunnable implements ASTInterpreter, Runnable {
     }
     public void runStopwatch(ASTStopwatchNode stopwatchNode) {
         synchronized (lock) {
-            final TimeController stopwatch = new TimeController();
+            final TimeController stopwatch = stopwatchNode.getTimeController();
             TimeEngine.startStopwatch(stopwatch, stopwatchNode, this);
             stopwatch.start();
             try {
