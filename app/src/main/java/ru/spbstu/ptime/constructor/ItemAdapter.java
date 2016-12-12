@@ -87,7 +87,7 @@ public class ItemAdapter extends DragItemAdapter<Pair<Long, ListItem>, ItemAdapt
         int level = 0;
         while (iterator.hasNext()) {
             Pair<Long, ListItem> pair = iterator.next();
-            if (pair.second instanceof ASTLoopNode) {
+            if (pair.second instanceof LoopEndItem) {
                 --level;
             }
             if (pair.first.equals(id)) {
