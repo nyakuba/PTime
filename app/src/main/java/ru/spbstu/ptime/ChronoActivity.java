@@ -47,8 +47,8 @@ public class ChronoActivity extends Activity {
     }
 
     public  Chronometer.OnChronometerTickListener Chrono (final Chronometer chr) {
-        Typeface dec = Typeface.createFromAsset(getAssets(), getString(R.string.digit_keyboard_font)); // установка пользовательского шрифта
-        mChr.setTypeface(dec);
+        //Typeface dec = Typeface.createFromAsset(getAssets(), getString(R.string.digit_keyboard_font)); // установка пользовательского шрифта
+       // mChr.setTypeface(dec);
         Chronometer.OnChronometerTickListener tickList = new Chronometer.OnChronometerTickListener() { // создание TickListener для секундомера
             @Override
             public void onChronometerTick(Chronometer arg0) { // что делать на каждый "тик"
@@ -57,7 +57,7 @@ public class ChronoActivity extends Activity {
                     // подсчитываем время
                     temp = SystemClock.elapsedRealtime() - chr.getBase();
                     hour = (temp/1000)/3600;
-                    min = (temp/1000%3600)/60;
+                    min = ((temp/1000)/60)%60;
                     sec = (temp/1000)%60;
                     if (hour < 10) {
                         if (min < 10) {
@@ -140,9 +140,6 @@ public class ChronoActivity extends Activity {
         btnStart.setEnabled(savedInstanceState.getBoolean("enBtnStart"));
         btnStop.setEnabled(savedInstanceState.getBoolean("enBtnStop"));
         btnReset.setEnabled(savedInstanceState.getBoolean("enBtnReset"));
-        btnStart.setText(savedInstanceState.getCharSequence("tBtnStart"));
-        btnStop.setText(savedInstanceState.getCharSequence("tBtnStop"));
-        btnReset.setText(savedInstanceState.getCharSequence("tBtnReset"));
         Log.d(LOG_TAG, "onRestoreInstanceState");
     }
 
@@ -165,9 +162,6 @@ public class ChronoActivity extends Activity {
         outState.putBoolean("enBtnStart", btnStart.isEnabled());
         outState.putBoolean("enBtnStop", btnStop.isEnabled());
         outState.putBoolean("enBtnReset", btnReset.isEnabled());
-        outState.putCharSequence("tBtnStart", btnStart.getText());
-        outState.putCharSequence("tBtnStop", btnStop.getText());
-        outState.putCharSequence("tBtnReset", btnReset.getText());
         Log.d(LOG_TAG, "onSaveInstanceState");
     }
 
@@ -189,11 +183,7 @@ public class ChronoActivity extends Activity {
         btnStart.setEnabled(false);
         btnStop.setEnabled(true);
         btnReset.setEnabled(true);
-        // устанавливаем текст кнопок
-        btnStart.setText("Запущен");
-        btnReset.setText(R.string.reset);
-        btnStop.setText(R.string.stop);
-        Toast.makeText(this, "Секундомер запущен", Toast.LENGTH_SHORT).show(); // создаем всплывающее сообщение
+        Toast.makeText(this, "Stopwatch was started", Toast.LENGTH_SHORT).show(); // создаем всплывающее сообщение
     }
 
     public void onStopClick(View view) { // действие при нажатии кнопки останова
@@ -201,13 +191,11 @@ public class ChronoActivity extends Activity {
         mChr.stop(); // останавливаем секундомер
         chrLnchd = false; // секундомер остановлен
         mChr.setText(currentTime); // выводим текущее время
-        // устанавливаем активность и текст кнопок
+        // устанавливаем активность кнопок
         btnStart.setEnabled(true);
         btnStop.setEnabled(false);
         btnReset.setEnabled(true);
-        btnStop.setText("Остановлен");
-        btnStart.setText(R.string.start);
-        Toast.makeText(this, "Секундомер остановлен", Toast.LENGTH_SHORT).show(); // создаем всплывающее сообщение
+        Toast.makeText(this, "Stopwatch was stopped", Toast.LENGTH_SHORT).show(); // создаем всплывающее сообщение
     }
 
     public void onResetClick(View view) {
@@ -216,13 +204,10 @@ public class ChronoActivity extends Activity {
         mChr.setText(R.string.start_time); // устанавливаем начальную строку текущего времени
         currentTime = "";
         resume = false; // выключаем возможность возобновления секундомера
-        // устанавливаем активность и текст кнопок
+        // устанавливаем активность кнопок
         btnStart.setEnabled(true);
         btnStop.setEnabled(false);
         btnReset.setEnabled(false);
-        btnReset.setText("Сброшен");
-        btnStop.setText(R.string.stop);
-        btnStart.setText(R.string.start);
-        Toast.makeText(this, "Секундомер сброшен", Toast.LENGTH_SHORT).show(); // создаем всплывающее сообщение
+        Toast.makeText(this, "Stopwatch was reseted", Toast.LENGTH_SHORT).show(); // создаем всплывающее сообщение
     }
 }
