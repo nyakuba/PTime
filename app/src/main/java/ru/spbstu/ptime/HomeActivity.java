@@ -11,7 +11,7 @@ import ru.spbstu.ptime.constructor.ConstructorActivity;
 public class HomeActivity extends TabActivity {
 
     private float lastX;
-    TabHost tabHost;
+    public TabHost tabHost;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,18 +28,13 @@ public class HomeActivity extends TabActivity {
         tabHost.addTab(tabSpec);
 
         tabSpec = tabHost.newTabSpec("tag2");
-        tabSpec.setIndicator("Constructor");
-        tabSpec.setContent(new Intent(this, ConstructorActivity.class));
+        tabSpec.setIndicator("List");
+        tabSpec.setContent(new Intent(this, ProgListActivity.class));
         tabHost.addTab(tabSpec);
 
         tabSpec = tabHost.newTabSpec("tag3");
         tabSpec.setIndicator("Timer");
         tabSpec.setContent(new Intent(this, TimerActivity.class));
-        tabHost.addTab(tabSpec);
-
-        tabSpec = tabHost.newTabSpec("tag4");
-        tabSpec.setIndicator("List");
-        tabSpec.setContent(new Intent(this, ProgListActivity.class));
         tabHost.addTab(tabSpec);
     }
 
@@ -74,12 +69,12 @@ public class HomeActivity extends TabActivity {
     public void switchTabs(boolean direction) {
         if (!direction) // true = move left
         {
-            if (tabHost.getCurrentTabTag().equals("tag4"))
-                tabHost.setCurrentTabByTag("tag3");
-            else if (tabHost.getCurrentTabTag().equals("tag3"))
+            if (tabHost.getCurrentTabTag().equals("tag3"))
                 tabHost.setCurrentTabByTag("tag2");
             else if (tabHost.getCurrentTabTag().equals("tag2"))
                 tabHost.setCurrentTabByTag("tag1");
+            else if (tabHost.getCurrentTabTag().equals("tag1"))
+                tabHost.setCurrentTabByTag("tag3");
         } else
         // move right
         {
@@ -88,7 +83,7 @@ public class HomeActivity extends TabActivity {
             else if (tabHost.getCurrentTabTag().equals("tag2"))
                 tabHost.setCurrentTabByTag("tag3");
             else if (tabHost.getCurrentTabTag().equals("tag3"))
-                tabHost.setCurrentTabByTag("tag4");
+                tabHost.setCurrentTabByTag("tag1");
         }
     }
 }
