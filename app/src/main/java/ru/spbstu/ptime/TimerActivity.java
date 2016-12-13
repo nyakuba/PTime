@@ -97,7 +97,7 @@ public class TimerActivity extends Activity {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
                                 isAlertShowing = false;
-                                timerSoundMP.stop();
+                                timerSoundMP.pause();
                                 isSoundPlaying = false;
                             }
                         });
